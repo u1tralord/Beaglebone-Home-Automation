@@ -1,11 +1,23 @@
 var fs = require('fs');
+var path = require('path');
+
+var logger = require("./logger.js");
+
+exports.load_config = function(config_name){
+	var file_path = path.join(GLOBAL["settings"].path.configs, config_name);
+	return JSON.parse(fs.readFileSync(file_path, 'utf8'));
+}
 
 exports.load_json = function(path){
 	return JSON.parse(fs.readFileSync(path, 'utf8'));
 }
 
-exports.load_config = function(){
-	get_files(GLOBAL["settings"].path.config).forEach(function(file){
+exports.get_files = function(path){
+	return fs.readdirSync(path);
+}
+
+exports.load_configs = function(){
+	this.get_files(GLOBAL["settings"].path.config).forEach(function(file){
 		var config_temp;
 		if(file.indexOf(".config") > -1){
 			config_temp = load_json(GLOBAL["settings"].path.config + file);
@@ -14,25 +26,38 @@ exports.load_config = function(){
 	});
 }
 
-
 //Module must include: init(log), 
-exports.load_modules = function(module_dir){
+exports.load_modules = function(module_dir, mod_log){
+	log = mod_log;
+	log.start_task_time("Loading external modules", "", 2);
+	log.write("Module Dir: " + path.join(GLOBAL["settings"].root_dir, GLOBAL["settings"].path.modules), "", 2);
 	var modules = {};
-	this.get_files(module_dir).forEach(function(file){
-		if(file.indexOf(".js") > -1){
+	
+	fs.readdirSync(module_dir).forEach(function(file){
+		if(file.indexOf(".js") > -1){	
 			var module_name = file.replace(".js", "");
-
-			modules[module_name] = require(module_dir + file);
+			log.start_task("Loading Module " + module_name, "", 3);
 			
-			console.log("Module loaded: " + module_name);
+			modules[module_name] = require(module_dir + file);
 
 			//Check if module has "init()" function
 			if(typeof modules[module_name].init == 'function'){
-				console.log("  Calling " + module_name + ".init()");
-				modules[module_name].init();
+				log.write("Generating Module log: " + module_name + ".log", "", 3);
+				
+				var mod_log = logger.create_log(
+					path.join(GLOBAL["settings"].root_dir, GLOBAL["settings"].path.logs, module_name + ".log"), module_name.toUpperCase() , 4
+				);
+				
+				log.write("Calling " + module_name + ".init()", "", 2);
+				
+				log.start_task();
+				modules[module_name].init(mod_log);
+				log.end_task();
 			}
+			log.end_task("Module Loaded", "", 2);
 		}
 	});
+	log.end_task_time("Modules successfully loaded", "", 2);
 	return modules;
 }
 
@@ -59,8 +84,4 @@ exports.file_exists = function(path){
 		return false;
 	}
 	return valid;
-}
-
-exports.get_files = function(path){
-	return fs.readdirSync(path);
 }

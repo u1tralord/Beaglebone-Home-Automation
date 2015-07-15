@@ -6,6 +6,7 @@
 // * Serve videos and pictures
 // 
 // * Pushbullet API send password & new IP & new SSID
+// * CHECK PUSHBULLET SENDER ID BEFORE DOING ANYHTING
 // * Create Pin Controller
 // * Auto Load Modules 
 // * Both Servers emit event to a command processer which selects a module
@@ -17,11 +18,18 @@ var module_loader = require('./core/module_loader.js');
 var ioserver = require('./core/IO_server.js');
 //__filename, __dirname
 var module_name = path.basename(module.filename, path.extname(module.filename));
-
 GLOBAL["settings"] = module_loader.load_json("./config/settings.config");
+GLOBAL["settings"].root_dir = __dirname;
 
-var core_log = logger.create_log(
+GLOBAL.core_log = logger.create_log(
 	path.join(__dirname, GLOBAL["settings"].path.logs, "CORE.log"), "CORE_SERVER", 4
+);
+
+var server_log = logger.create_log(
+	path.join(__dirname, GLOBAL["settings"].path.logs, "SERVER.log"), "SERVER" , 4
+);
+var module_loader_log = logger.create_log(
+	path.join(__dirname, GLOBAL["settings"].path.logs, "MODULE_LOADER.log"), "MODULE_LOADER" , 4
 );
 var postServer_log = logger.create_log(
 	path.join(__dirname, GLOBAL["settings"].path.logs, "POST_SERVER.log"),"POST_SERVER" , 4
@@ -36,8 +44,8 @@ var webServer = ioserver.createWebServer(webServer_log, path.join(__dirname, GLO
 postServer.start(GLOBAL["settings"].post.ip, GLOBAL["settings"].post.port);
 webServer.start(GLOBAL["settings"].web.ip, GLOBAL["settings"].web.port);
 
-modules = module_loader.load_modules(path.join(__dirname, GLOBAL["settings"].path.modules));
-console.log(modules);
+modules = module_loader.load_modules(path.join(__dirname, GLOBAL["settings"].path.modules), module_loader_log);
+
 /*
 var io_log = logger.create_log("logs/io_server.log", "IO_SERVER", 4);
 var io_server = ioserver.getIOServer(io_log, __dirname+"/client");

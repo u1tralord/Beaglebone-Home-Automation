@@ -46,18 +46,26 @@ function Log(path, module, log_level){
 }
 
 Log.prototype.write = function(message, module, priority){
-	var entry = get_indent(this.indent) + "["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
-	if(priority <= this.log_level){
-		console.log(entry);
-		this.writeStream.write(entry + os.EOL);
+	if(message != ""){
+		var entry = get_indent(GLOBAL.core_log.indent) + "["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
+		GLOBAL.core_log.addEntry(entry);
+		
+		if(priority <= this.log_level){
+			console.log(entry);
+			this.writeStream.write(entry + os.EOL);
+		}
 	}
 };
 
 Log.prototype.write_time = function(message, module, priority){
-	var entry = get_indent(this.indent) + "("+getDateTime() + ") ["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
-	if(priority <= this.log_level){
-		console.log(entry);
-		this.writeStream.write(entry + os.EOL);
+	if(message != ""){
+		var entry = get_indent(GLOBAL.core_log.indent) + "("+getDateTime() + ") ["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
+		GLOBAL.core_log.addEntry(entry);
+		
+		if(priority <= this.log_level){
+			console.log(entry);
+			this.writeStream.write(entry + os.EOL);
+		}
 	}
 };
 
@@ -65,25 +73,37 @@ Log.prototype.write_err = function(message, module){
 	this.write(message, module, ERROR_LEVEL);
 };
 
+Log.prototype.write_err_time = function(message, module){
+	this.write_time(message, module, ERROR_LEVEL);
+};
+
 Log.prototype.start_task = function(message, module, priority){
 	this.write(message + "...", module, priority);
+	GLOBAL.core_log.indent++;
 	this.indent++;
 };
 
 Log.prototype.start_task_time = function(message, module, priority){
 	this.write_time(message + "...", module, priority);
+	GLOBAL.core_log.indent++;
 	this.indent++;
 };
 
 Log.prototype.end_task = function(message, module, priority){
-	this.write(message, module, priority);
+	GLOBAL.core_log.indent--;
 	this.indent--;
+	this.write(message, module, priority);
 };
 
 Log.prototype.end_task_time = function(message, module, priority){
-	this.write_time(message, module, priority);
+	GLOBAL.core_log.indent--;
 	this.indent--;
+	this.write_time(message, module, priority);
 };
+
+Log.prototype.addEntry = function(entry){
+	this.writeStream.write(entry + os.EOL);
+}
 
 Log.prototype.close = function(message){
 	this.writeStream.write(getLine(message))

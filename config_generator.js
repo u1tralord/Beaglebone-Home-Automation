@@ -76,14 +76,34 @@ pinMap["led0"] = {       //Custom label to be used inside the program (Probably 
 	value:0              //default value to set when the server starts. Range:[0.0 - 1.0]
 };
 */
-var pin_map = {};
-pin_map.config_name = "pin_map";
-pin_map.pwm = ["P8_13", "P8_19", "P8_34", "P8_36", "P8_45", "P8_46", "P9_14", "P9_16", "P9_21", "P9_22", "P9_28", "P9_29", "P9_31", "P9_42"];
-pin_map["led0"] = {pin:"USR0", output:true, pwmEnabled: false, value:0};
-pin_map["led1"] = {pin:"USR1", output:true, pwmEnabled: false, value:0};
-pin_map["led2"] = {pin:"USR2", output:true, pwmEnabled: false, value:0};
-pin_map["led3"] = {pin:"USR3", output:true, pwmEnabled: false, value:0};
-pin_map["ledRed"] = {pin:"P9_14)", output:true, pwmEnabled: false, value:0};
-pin_map["ledGreen"] = {pin:"P9_16", output:true, pwmEnabled: false, value:0};
-pin_map["ledBlue"] = {pin:"P9_22", output:true, pwmEnabled: false, value:0};
-saveConfig("config/pin_map", pin_map);
+var pin_control = {};
+pin_control.config_name = "pin_control";
+pin_control.update_rate = 1000/30;
+pin_control.acceptCommands = ["ledControl"];
+
+pin_control.pin_map = {};
+pin_control.pwm = ["P8_13", "P8_19", "P8_34", "P8_36", "P8_45", "P8_46", "P9_14", "P9_16", "P9_21", "P9_22", "P9_28", "P9_29", "P9_31", "P9_42"];
+pin_control.pin_map["led0"] = {pin:"USR0", output:true, pwmEnabled: false, value:0};
+pin_control.pin_map["led1"] = {pin:"USR1", output:true, pwmEnabled: false, value:0};
+pin_control.pin_map["led2"] = {pin:"USR2", output:true, pwmEnabled: false, value:0};
+pin_control.pin_map["led3"] = {pin:"USR3", output:true, pwmEnabled: false, value:0};
+pin_control.pin_map["ledRed"] = {pin:"P9_14)", output:true, pwmEnabled: false, value:0};
+pin_control.pin_map["ledGreen"] = {pin:"P9_16", output:true, pwmEnabled: false, value:0};
+pin_control.pin_map["ledBlue"] = {pin:"P9_22", output:true, pwmEnabled: false, value:0};
+saveConfig("config/pin_control", pin_control);
+
+
+var pushbullet = {};
+pushbullet.config_name = "pushbullet";
+pushbullet.update_rate = 5000;
+pushbullet.acceptCommands = [];
+
+pushbullet.devices = {};
+pushbullet.devices.LGG3 = "";
+pushbullet.devices.GS4 = "";
+pushbullet.devices.IPOD5 = "";
+pushbullet.devices.CHROME = "";
+pushbullet.devices.FIREFOX = "";
+
+pushbullet.API_key = "v1ZhwOm1vFGIbPo3Zr0yZNBEvXFahtqcxmujy5M3deHjE";
+saveConfig("config/pushbullet", pushbullet);
