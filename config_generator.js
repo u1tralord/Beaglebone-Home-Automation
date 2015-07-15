@@ -95,8 +95,10 @@ saveConfig("config/pin_control", pin_control);
 
 var pushbullet = {};
 pushbullet.config_name = "pushbullet";
-pushbullet.update_rate = 5000;
 pushbullet.acceptCommands = [];
+
+pushbullet.approved_users = ["ujy5M3deHjE"];
+pushbullet.push_command_code = "$(9028)";
 
 pushbullet.devices = {};
 pushbullet.devices.LGG3 = "";
