@@ -51,9 +51,10 @@ settings.logger = {};
 settings.path.client = "client/";
 settings.path.logs = "logs/";
 settings.path.configs = "config/";
+settings.path.modules = "modules/";
 
 settings.web.ip = getLocalIp();
-settings.web.port = 8080;
+settings.web.port = 8000;
 
 settings.post.ip = getLocalIp();
 settings.post.port = 4040;

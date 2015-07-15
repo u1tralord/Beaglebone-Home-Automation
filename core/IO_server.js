@@ -26,8 +26,8 @@ function WebServer(log, pathToClient){
 }
 
 WebServer.prototype.start = function(ip, port){
-	this.server.listen(ip, port);
-	this.log.write_time("Server listening on port: " + port, "", 2);
+	this.server.listen(port);
+	this.log.write_time("Server listening at  " + ip + ":" +port, "", 2);
 }
 
 WebServer.prototype.close = function(){
@@ -55,7 +55,8 @@ function PostServer(log){
 	            body += data;
 	            
 	            //Grab last line of post request (the line containing commands & args)
-	            parse_post_data(body.split(/\r?\n/)[6]);
+	            var post_args = parse_post_data(body.split(/\r?\n/)[6]);
+	            log.write_time(JSON.stringify(post_args), "", 2);
 	        });
 	        req.on('end', function () {
 	            //console.log("Body: " + body);
@@ -75,8 +76,8 @@ function PostServer(log){
 }
 
 PostServer.prototype.start = function(ip, port){
-	this.server.listen(ip, port);
-	this.log.write_time("Server listening on port: " + port, "", 2);
+	this.server.listen(port);
+	this.log.write_time("Server listening at  " + ip + ":" +port, "", 2);
 }
 
 PostServer.prototype.close = function(){
@@ -85,6 +86,19 @@ PostServer.prototype.close = function(){
 	this.log.write_time("Server successfully closed", "", 2);
 }
 
+function parse_post_data(data){
+	var args = {};
+	//var args = new Array();
+	if(data != null){
+		data.split("&").forEach(function(arg){
+			
+			var key = arg.split("=")[0];
+			var value = arg.split("=")[1];
+			args[key] = value;
+		});
+	}
+	return args;
+}
 
 
 

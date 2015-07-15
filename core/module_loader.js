@@ -18,11 +18,11 @@ exports.load_config = function(){
 //Module must include: init(log), 
 exports.load_modules = function(module_dir){
 	var modules = {};
-	get_files(module_dir).forEach(function(file){
+	this.get_files(module_dir).forEach(function(file){
 		if(file.indexOf(".js") > -1){
 			var module_name = file.replace(".js", "");
 
-			modules[module_name] = require("./" + module_dir + file);
+			modules[module_name] = require(module_dir + file);
 			
 			console.log("Module loaded: " + module_name);
 
