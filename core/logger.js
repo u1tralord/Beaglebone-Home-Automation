@@ -46,25 +46,27 @@ function Log(path, module, log_level){
 }
 
 Log.prototype.write = function(message, module, priority){
-	if(message != ""){
-		var entry = get_indent(GLOBAL.core_log.indent) + "["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
-		GLOBAL.core_log.addEntry(entry);
+	if(message != "" && message != null){
+		var global_tab_entry = get_indent(GLOBAL.core_log.indent) + "["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
+		var local_tab_entry = get_indent(this.indent) + "["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
+		GLOBAL.core_log.addEntry(global_tab_entry);
 		
 		if(priority <= this.log_level){
-			console.log(entry);
-			this.writeStream.write(entry + os.EOL);
+			console.log(global_tab_entry);
+			this.writeStream.write(local_tab_entry + os.EOL);
 		}
 	}
 };
 
 Log.prototype.write_time = function(message, module, priority){
-	if(message != ""){
-		var entry = get_indent(GLOBAL.core_log.indent) + "("+getDateTime() + ") ["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
-		GLOBAL.core_log.addEntry(entry);
+	if(message != "" && message != null){
+		var global_tab_entry = get_indent(GLOBAL.core_log.indent) + "("+getDateTime() + ") ["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
+		var local_tab_entry = get_indent(this.indent) + "("+getDateTime() + ") ["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
+		GLOBAL.core_log.addEntry(global_tab_entry);
 		
 		if(priority <= this.log_level){
-			console.log(entry);
-			this.writeStream.write(entry + os.EOL);
+			console.log(global_tab_entry);
+			this.writeStream.write(local_tab_entry + os.EOL);
 		}
 	}
 };
@@ -78,13 +80,19 @@ Log.prototype.write_err_time = function(message, module){
 };
 
 Log.prototype.start_task = function(message, module, priority){
-	this.write(message + "...", module, priority);
+	if(message != "" && message != null)
+		this.write(message + "...", module, priority);
+	else
+		this.write(message, module, priority);
 	GLOBAL.core_log.indent++;
 	this.indent++;
 };
 
 Log.prototype.start_task_time = function(message, module, priority){
-	this.write_time(message + "...", module, priority);
+	if(message != "" && message != null)
+		this.write_time(message + "...", module, priority);
+	else
+		this.write_time(message, module, priority);
 	GLOBAL.core_log.indent++;
 	this.indent++;
 };

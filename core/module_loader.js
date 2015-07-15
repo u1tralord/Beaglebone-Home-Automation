@@ -50,9 +50,9 @@ exports.load_modules = function(module_dir, mod_log){
 				
 				log.write("Calling " + module_name + ".init()", "", 2);
 				
-				log.start_task();
+				log.start_task("","",4);
 				modules[module_name].init(mod_log);
-				log.end_task();
+				log.end_task("","",4);
 			}
 			log.end_task("Module Loaded", "", 2);
 		}
