@@ -2,7 +2,7 @@
   "name": "BeagleBone Home Automation",
   "version": "0.0.1",
   "description": "Home automation server to run on a Beaglebone Black",
-  "author": "Jacob Poston <you.name@example.org>",
+  "author": "Jacob Poston <http://u1tralord.github.io/>",
   
   "contributors": [{
     "name": "Jacob Poston",
@@ -18,6 +18,9 @@
   
   "dependencies": {
     "connect": "*",
-    "serve-static": "*"
+    "serve-static": "*",
+	"express": "*",
+	"body-parser": "*",
+	"pushbullet": "*";
   }
 }
