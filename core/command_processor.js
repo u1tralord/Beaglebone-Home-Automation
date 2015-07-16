@@ -1,6 +1,7 @@
 var path = require('path');
 
 var module_loader = require('./module_loader.js');
+var logger = require('./logger.js');
 
 var module_name = path.basename(module.filename, path.extname(module.filename));
 
@@ -15,19 +16,14 @@ function CommandProcessor(log){
 }
 
 CommandProcessor.prototype.loadModules = function(module_loader_log){
-	this.modules = module_loader.load_modules(GLOBAL["settings"].path.modules, module_loader_log);
-
-	//Modules need: 
-	// * Command Emitter
-	// * acceptedCommands []
-	// * module_name
-	// * init()
-	// * execCommand()
-	// * close()
-	for(var module_name in this.modules){
-		if(this.modules[module_name].commandEmitter != null){
-			this.modules[module_name].commandEmitter.on('command', this.processCommand);
-		}
+	this.modules = module_loader.loadModules(GLOBAL["settings"].path.modules, module_loader_log);
+	
+	var events = require('events');
+	for(var moduleName in this.modules){
+		this.modules[moduleName].on('test', function(){
+			console.log("SUPER COOL");
+		});
+		this.modules[moduleName].init();
 	}
 }
 

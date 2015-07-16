@@ -71,12 +71,12 @@ Log.prototype.write_time = function(message, module, priority){
 	}
 };
 
-Log.prototype.write_err = function(message, module){
-	this.write(message, module, ERROR_LEVEL);
+Log.prototype.write_err = function(message){
+	this.write(message, this.module + " - ERROR", ERROR_LEVEL);
 };
 
-Log.prototype.write_err_time = function(message, module){
-	this.write_time(message, module, ERROR_LEVEL);
+Log.prototype.write_err_time = function(message){
+	this.write_time(message, this.module + " - ERROR", ERROR_LEVEL);
 };
 
 Log.prototype.start_task = function(message, module, priority){
