@@ -8,7 +8,7 @@ var log;
 var pusher;
 var stream;
 
-var commandEmitter = new events.EventEmitter();
+exports.commandEmitter = new events.EventEmitter();
 
 exports.init = function(_log){
 	log = _log;
@@ -33,7 +33,7 @@ exports.init = function(_log){
 					if(pushsettings.approved_users.indexOf(push.source_user_iden) > -1){
 						var args = parse_push_data(body);
 						log.write("Push: " + JSON.stringify(args), "", 4);
-						commandEmitter.emit('command', args);
+						this.commandEmitter.emit('command', args);
 					}
 					else
 						log.write("UnApproved Sender", "", 4);
