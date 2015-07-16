@@ -38,6 +38,7 @@ var saveConfig = function(filename, objectToSave){
 /***      run: "node core/config.js" to generate the configs      ***/
 ////**************************************************************////
 
+var account_info = JSON.parse(fs.readFileSync("account_info.config", 'utf8'));
 
 //Basic server configuration
 var settings = {};
@@ -107,5 +108,5 @@ pushbullet.devices.IPOD5 = "";
 pushbullet.devices.CHROME = "";
 pushbullet.devices.FIREFOX = "";
 
-pushbullet.API_key = "v1ZhwOm1vFGIbPo3Zr0yZNBEvXFahtqcxmujy5M3deHjE";
+pushbullet.API_key = account_info.pushbullet.API_key;
 saveConfig("config/pushbullet", pushbullet);
