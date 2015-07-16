@@ -39,9 +39,9 @@ PushBulletClient.prototype.init = function(){
 	this.log.write("Pushbullet is listening", "", 3);
 }
 
-PushBulletClient.prototype.execCommand = function(command){
+PushBulletClient.prototype.execCommand = function(commandArgs){
 	if(running){
-		this.log.write("Processing command: " + JSON.stringify(command), "", 1);
+		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
 	}
 }
 

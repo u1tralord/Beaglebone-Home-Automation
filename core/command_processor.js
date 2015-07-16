@@ -17,17 +17,27 @@ function CommandProcessor(log){
 
 CommandProcessor.prototype.loadModules = function(module_loader_log){
 	this.modules = module_loader.loadModules(GLOBAL["settings"].path.modules, module_loader_log);
-	
-	var events = require('events');
-	for(var moduleName in this.modules){
-		this.modules[moduleName].on('command', function(args){
-			console.log("COMMAND RECEIVED!");
-			console.log(args);
+	var processCommand = this.processCommand;
+	var modules = this.modules;
+		
+	for(var moduleName in this.modules){		
+		modules[moduleName].on('command', function(args){
+			if(args.hasOwnProperty('command')){
+				this.log.write("Command received: "+ JSON.stringify(args), "", 3);
+				processCommand(modules, args);
+			}
 		});
-		this.modules[moduleName].init();
+		modules[moduleName].init();
 	}
 }
 
-CommandProcessor.prototype.processCommand = function(args){
-	this.log.write("GOTCHA!" + JSON.stringify(args));
+CommandProcessor.prototype.processCommand = function(modules, args){
+	
+	for(var moduleName in this.modules){
+		console.log(modules[moduleName]);
+		if(modules[moduleName].acceptedCommands.indexOf(args.command) > -1)
+		{
+			console.log("SENDING COMMAND TO: " + moduleName);
+		}
+	}
 }
