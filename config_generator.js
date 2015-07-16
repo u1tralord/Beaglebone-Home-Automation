@@ -1,5 +1,6 @@
 var fs = require('fs');
 var os = require('os');
+var path = require('path');
 var ifaces = os.networkInterfaces();
 
 var getLocalIp = function(){
@@ -23,6 +24,33 @@ var getLocalIp = function(){
 	  });
 	});
 	return ip;
+}
+
+function dir_exists(path){
+	try {
+		stats = fs.lstatSync(path);
+		if (stats.isDirectory()) { return true; }
+	}
+	catch (e) {
+		return false;
+	}
+}
+
+function generatePaths(paths){
+	for (var path_name in paths) {
+	if (paths.hasOwnProperty(path_name)){
+		var path = paths[path_name];
+		if(!dir_exists(path)){
+			try {
+				fs.mkdirSync(path);
+			} catch(e) {
+				if ( e.code != 'EEXIST' ) throw e;
+			}
+		}
+		else
+			console.log("Dir already exists");
+	}
+}
 }
 
 var saveConfig = function(filename, objectToSave){
@@ -49,10 +77,11 @@ settings.web = {};
 settings.post = {};
 settings.logger = {};
 
-settings.path.client = "client/";
-settings.path.logs = "logs/";
-settings.path.configs = "config/";
-settings.path.modules = "modules/";
+settings.path.client = path.join(__dirname, "client/");
+settings.path.logs = path.join(__dirname, "logs/");
+settings.path.configs = path.join(__dirname, "config/");
+settings.path.modules = path.join(__dirname, "modules/");
+generatePaths(settings.path);
 
 settings.web.ip = getLocalIp();
 settings.web.port = 8000;
@@ -64,7 +93,7 @@ settings.logger.log_level = 4;       // Lowest level of log entry allowed to be 
 settings.logger.error_level = 1;     // Priority level of errors caught
 settings.logger.log_priority_level = false;
 
-saveConfig("config/settings", settings);
+saveConfig(path.join(settings.path.configs, "/settings"), settings);
 
 
 
@@ -91,7 +120,7 @@ pin_control.pin_map["led3"] = {pin:"USR3", output:true, pwmEnabled: false, value
 pin_control.pin_map["ledRed"] = {pin:"P9_14)", output:true, pwmEnabled: false, value:0};
 pin_control.pin_map["ledGreen"] = {pin:"P9_16", output:true, pwmEnabled: false, value:0};
 pin_control.pin_map["ledBlue"] = {pin:"P9_22", output:true, pwmEnabled: false, value:0};
-saveConfig("config/pin_control", pin_control);
+saveConfig(path.join(settings.path.configs, "pin_control"), pin_control);
 
 
 var pushbullet = {};
@@ -109,4 +138,4 @@ pushbullet.devices.CHROME = "";
 pushbullet.devices.FIREFOX = "";
 
 pushbullet.API_key = account_info.pushbullet.API_key;
-saveConfig("config/pushbullet", pushbullet);
+saveConfig(path.join(settings.path.configs, "pushbullet"), pushbullet);

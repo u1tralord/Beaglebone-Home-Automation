@@ -30,7 +30,7 @@ exports.load_configs = function(){
 exports.load_modules = function(module_dir, mod_log){
 	log = mod_log;
 	log.start_task_time("Loading external modules", "", 2);
-	log.write("Module Dir: " + path.join(GLOBAL["settings"].root_dir, GLOBAL["settings"].path.modules), "", 2);
+	log.write("Module Dir: " + GLOBAL["settings"].path.modules, "", 2);
 	var modules = {};
 	
 	fs.readdirSync(module_dir).forEach(function(file){
@@ -45,7 +45,7 @@ exports.load_modules = function(module_dir, mod_log){
 				log.write("Generating Module log: " + module_name + ".log", "", 3);
 				
 				var mod_log = logger.create_log(
-					path.join(GLOBAL["settings"].root_dir, GLOBAL["settings"].path.logs, module_name + ".log"), module_name.toUpperCase() , 4
+					path.join(GLOBAL["settings"].path.logs, module_name + ".log"), module_name.toUpperCase() , 4
 				);
 				
 				log.write("Calling " + module_name + ".init()", "", 2);
