@@ -19,10 +19,11 @@ CommandProcessor.prototype.loadModules = function(module_loader_log){
 
 	//Modules need: 
 	// * Command Emitter
-	// * init()
-	// * close()
 	// * acceptedCommands []
 	// * module_name
+	// * init()
+	// * execCommand()
+	// * close()
 	for(var module_name in this.modules){
 		if(this.modules[module_name].commandEmitter != null){
 			this.modules[module_name].commandEmitter.on('command', this.processCommand);

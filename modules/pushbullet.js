@@ -1,59 +1,76 @@
 var PushBullet = require('pushbullet');
-
-var module_loader = require("../core/module_loader.js");
 var events = require('events');
-var pushsettings = module_loader.load_config("pushbullet.config");
 
-var log;
-var pusher;
-var stream;
+exports.createModule(log, settings, module_name){
+	if(log != null && settings != null && module_name != null){
+		return new PushBulletClient(log, settings, module_name);
+	}
+	else 
+		throw new Error("Missing args to create module");
+}
 
-exports.commandEmitter = new events.EventEmitter();
+function PushBulletClient(log, settings, module_name){
+	this.settings = settings;
+	this.log = log;
+	this.module_name = module_name;
+	
+	this.commandEmitter = new events.EventEmitter();
+	this.acceptedCommands = this.settings.acceptedCommands;
+}
 
-exports.init = function(_log){
-	log = _log;
-	if(pushsettings != null){
-		pusher = new PushBullet(pushsettings.API_key);
-		log.write("Instance started with API key: " + pushsettings.API_key, "", 3);
-		log.write("Approved Users: " + JSON.stringify(pushsettings.approved_users), "", 3);
-		log.write("Command Code: " + pushsettings.push_command_code, "", 3);
-		
-		stream = pusher.stream();
-		log.write("Stream created", "", 3);
-		
-		stream.on('push', function(push){
-			log.write("New Push Detected", "", 3);
-			log.write("Type:  " + push.type, "", 4);
-			if(push.type == "clip"){
-				var body = push.body.split(":");
-				var title = body[0];
-				body = body[1].trim();
-				
-				if(title = pushsettings.push_command_code){
-					if(pushsettings.approved_users.indexOf(push.source_user_iden) > -1){
-						var args = parse_push_data(body);
-						log.write("Push: " + JSON.stringify(args), "", 4);
-						this.commandEmitter.emit('command', args);
-					}
-					else
-						log.write("UnApproved Sender", "", 4);
+PushBulletClient.prototype.init = function(){
+	this.pusher = new PushBullet(this.settings.API_key);
+	this.log.write("Instance started with API key: " + this.settings.API_key, "", 3);
+	this.log.write("Approved Users: " + JSON.stringify(this.settings.approved_users), "", 3);
+	this.log.write("Command Code: " + this.settings.push_command_code, "", 3);
+	
+	this.stream = pusher.stream();
+	this.log.write("Stream created", "", 3);
+	
+	this.stream.on('push' this.processPush);
+	this.stream.on('connect', this.processConnect);
+	this.stream.connect();
+	this.running = true;
+	log.write("Pushbullet is listening", "", 3);
+}
+
+PushBulletClient.prototype.execCommand = function(command){
+	if(running){
+		this.log.write("Processing command: " + JSON.stringify(command), "", 1);
+	}
+}
+
+PushBulletClient.prototype.close(){
+	this.running = false;
+	this.stream.close();
+}
+
+PushBulletClient.prototype.processConnect = function(){
+	log.write("Stream connected", "", 3);
+}
+
+PushBulletClient.prototype.processPush = function(push){
+	this.log.write("New Push Detected", "", 3);
+	this.log.write("Type:  " + push.type, "", 4);
+	
+	if(push.type == "clip"){
+		var body = push.body.split(":");
+		if(body[1] != null){
+			var title = body[0];
+			body = body[1].trim();
+			
+			if(title = this.settings.push_command_code){
+				if(this.settings.approved_users.indexOf(push.source_user_iden) > -1){
+					var args = parse_push_data(body);
+					log.write("Push: " + JSON.stringify(args), "", 4);
+					this.commandEmitter.emit('command', args);
 				}
 				else
-					log.write("Not a command", "", 4);
+					log.write("Unapproved Sender", "", 2);
 			}
-		});
-
-		stream.on('connect', function(){
-			log.write("Stream connected", "", 3);
-		});
-		
-		stream.connect();
-		//this.update();
-		log.write("Pushbullet is listening", "", 4);
-	}
-	else{
-		log.write_err("Error: Config file not found.", "", 1);
-		log.write_err("This module has been disabled", "", 1);
+			else
+				log.write("Not a command", "", 4);
+		}
 	}
 }
 
@@ -70,9 +87,6 @@ function parse_push_data(pushBody){
 	return args;
 }
 
-exports.close = function(){
-	stream.close();
-}
 /*if(dev.nickname == "LGE VS985 4G")
 {
 	console.log("Sending push!");

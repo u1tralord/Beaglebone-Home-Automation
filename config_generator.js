@@ -109,7 +109,7 @@ pinMap["led0"] = {       //Custom label to be used inside the program (Probably 
 var pin_control = {};
 pin_control.config_name = "pin_control";
 pin_control.update_rate = 1000/30;
-pin_control.acceptCommands = ["ledControl"];
+pin_control.acceptedCommands = ["ledControl"];
 
 pin_control.pin_map = {};
 pin_control.pwm = ["P8_13", "P8_19", "P8_34", "P8_36", "P8_45", "P8_46", "P9_14", "P9_16", "P9_21", "P9_22", "P9_28", "P9_29", "P9_31", "P9_42"];
@@ -125,7 +125,7 @@ saveConfig(path.join(settings.path.configs, "pin_control"), pin_control);
 
 var pushbullet = {};
 pushbullet.config_name = "pushbullet";
-pushbullet.acceptCommands = [];
+pushbullet.acceptedCommands = [];
 
 pushbullet.approved_users = ["ujy5M3deHjE"];
 pushbullet.push_command_code = "$(9028)";
