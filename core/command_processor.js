@@ -20,8 +20,9 @@ CommandProcessor.prototype.loadModules = function(module_loader_log){
 	
 	var events = require('events');
 	for(var moduleName in this.modules){
-		this.modules[moduleName].on('test', function(){
-			console.log("SUPER COOL");
+		this.modules[moduleName].on('command', function(args){
+			console.log("COMMAND RECEIVED!");
+			console.log(args);
 		});
 		this.modules[moduleName].init();
 	}

@@ -31,8 +31,9 @@ PushBulletClient.prototype.init = function(){
 	this.stream = this.pusher.stream();
 	this.log.write("Stream created", "", 3);
 	
-	this.stream.on('push', this.processPush);
-	this.stream.on('connect', this.processConnect);
+	this.listenForConnect();
+	this.listenForPush();
+	
 	this.stream.connect();
 	this.running = true;
 	this.log.write("Pushbullet is listening", "", 3);
@@ -49,12 +50,51 @@ PushBulletClient.prototype.close = function(){
 	this.stream.close();
 }
 
+PushBulletClient.prototype.listenForPush = function(){
+	var log = this.log;
+	var thisEmitter = this;
+	var settings = this.settings;
+	
+	this.stream.on('push', function(push){
+		log.write("New Push Detected", "", 3);
+		log.write("Type:  " + push.type, "", 4);
+		
+		if(push.type == "clip"){
+			var body = push.body.split(":");
+			if(body[1] != null){
+				var title = body[0];
+				body = body[1].trim();
+				
+				if(title = settings.push_command_code){
+					if(settings.approved_users.indexOf(push.source_user_iden) > -1){
+						var args = parse_push_data(body);
+						log.write("Push: " + JSON.stringify(args), "", 4);
+						thisEmitter.emit('command', args);
+					}
+					else
+						log.write("Unapproved Sender", "", 2);
+				}
+				else
+					log.write("Not a command", "", 4);
+			}
+		}
+	});
+}
+
+PushBulletClient.prototype.listenForConnect = function(){
+	var log = this.log;
+	var thisEmitter = this;
+	this.stream.on('connect', function(){
+		log.write("Stream connected", "", 3);
+	});
+}
+
 PushBulletClient.prototype.processConnect = function(){
 	//this.log.write("Stream connected", "", 3);
 }
 
 PushBulletClient.prototype.processPush = function(push){
-	//this.log.write("New Push Detected", "", 3);
+	this.log.write("New Push Detected", "", 3);
 	//this.log.write("Type:  " + push.type, "", 4);
 	
 	if(push.type == "clip"){
@@ -78,10 +118,12 @@ PushBulletClient.prototype.processPush = function(push){
 	}
 }
 
-PushBulletClient.prototype.getMeIden = function(){
+PushBulletClient.prototype.getMyIden = function(){
+	var iden = null;
 	this.pusher.me(function(err, res){
-		console.log(res);
+		iden = res.iden;
 	});
+	return iden;
 }
 
 function parse_push_data(pushBody){
