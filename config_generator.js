@@ -151,11 +151,11 @@ pushbullet.approved_users = ["ujy5M3deHjE"];
 pushbullet.push_command_code = "$(9028)";
 
 pushbullet.devices = {};
-pushbullet.devices.LGG3 = "";
-pushbullet.devices.GS4 = "";
-pushbullet.devices.IPOD5 = "";
-pushbullet.devices.CHROME = "";
-pushbullet.devices.FIREFOX = "";
+pushbullet.devices.LGG3 = "sjz5qsr8QGO";
+pushbullet.devices.GS4 = "sjAiVsKnSTs";
+pushbullet.devices.iPod5 = "sjz7O3P0J16";
+pushbullet.devices.Chrome = "sjzWIEVDzOK";
+pushbullet.devices.Firefox = "sjz0AKYrZV6";
 
 pushbullet.API_key = account_info.pushbullet.API_key;
 saveConfig(path.join(settings.path.configs, "pushbullet"), pushbullet);

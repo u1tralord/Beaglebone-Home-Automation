@@ -17,7 +17,6 @@ function PushBulletClient(log, settings, moduleName){
 	this.log = log;
 	this.moduleName = moduleName;
 	
-	//this.commandEmitter = new events.EventEmitter();
 	this.acceptedCommands = this.settings.acceptedCommands;
 }
 util.inherits(PushBulletClient, events.EventEmitter);
@@ -37,10 +36,15 @@ PushBulletClient.prototype.init = function(){
 	this.stream.connect();
 	this.running = true;
 	this.log.write_time("Pushbullet is listening", "", 3);
+
+	this.sendPush({type:'note', deviceName:'LGG3', title:'Test', body:'Test Body'});
 }
 
 PushBulletClient.prototype.execCommand = function(commandArgs){
 	if(running){
+		if(commandArgs.command == 'sendPush')
+			this.sendPush(commandArgs);
+
 		this.log.write_time("Processing command: " + JSON.stringify(commandArgs), "", 1);
 	}
 }
@@ -65,7 +69,7 @@ PushBulletClient.prototype.listenForPush = function(){
 				var title = body[0];
 				body = body[1].trim();
 				
-				if(title = settings.push_command_code){
+				if(title == settings.push_command_code){
 					if(settings.approved_users.indexOf(push.source_user_iden) > -1){
 						var args = parse_push_data(body);
 						log.write_time("Push: " + JSON.stringify(args), "", 4);
@@ -87,10 +91,6 @@ PushBulletClient.prototype.listenForConnect = function(){
 	this.stream.on('connect', function(){
 		log.write_time("Stream connected", "", 3);
 	});
-}
-
-PushBulletClient.prototype.processConnect = function(){
-	//this.log.write("Stream connected", "", 3);
 }
 
 PushBulletClient.prototype.processPush = function(push){
@@ -124,6 +124,36 @@ PushBulletClient.prototype.getMyIden = function(){
 		iden = res.iden;
 	});
 	return iden;
+}
+
+function isValidPushData(pushData){
+	if(pushData.hasOwnProperty('type') && pushData.hasOwnProperty('deviceName')){
+		if(pushData.type == 'note' && pushData.hasOwnProperty('title') && pushData.hasOwnProperty('body'))
+			return true;
+	}
+	else
+		return false;
+}
+
+PushBulletClient.prototype.sendPush = function(pushData){
+	var pusher = this.pusher;
+	var log = this.log;
+
+	if(isValidPushData(pushData)){
+		if(pushData.type == 'note'){
+			this.pusher.devices(function(err, res){
+				res.devices.forEach(function(device){
+					if(device.nickname == pushData.deviceName){
+						pusher.note(device.iden, 
+								pushData.title, 
+								pushData.body, 
+								function(er, res) {}
+								);
+					}
+				});
+			});
+		}
+	}
 }
 
 function parse_push_data(pushBody){

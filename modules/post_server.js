@@ -18,6 +18,7 @@ function PostServer(log, settings, moduleName){
 	this.moduleName = moduleName;
 	this.acceptedCommands = this.settings.acceptedCommands;
 	
+	var thisEmitter = this;
 	this.server = http.createServer( function(req, res) {
 	    //console.dir(req.param);
 	    if (req.method == 'POST') {
@@ -28,8 +29,9 @@ function PostServer(log, settings, moduleName){
 	            body += data;
 	            
 	            //Grab last line of post request (the line containing commands & args)
-	            var post_args = parse_post_data(body.split(/\r?\n/)[6]);
-	            log.write_time(JSON.stringify(post_args), "", 2);
+	            var postArgs = parse_post_data(body.split(/\r?\n/)[6]);
+	            log.write_time(JSON.stringify(postArgs), "", 2);
+	            thisEmitter.emit('command', postArgs);
 	        });
 	        req.on('end', function () {
 	            //console.log("Body: " + body);
