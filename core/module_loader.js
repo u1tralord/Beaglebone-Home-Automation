@@ -115,6 +115,10 @@ function isModule(module){
 	return validModule;
 }
 
+exports.loadModule = function(moduleName, modLog){
+	
+}
+
 exports.loadModules = function(module_dir, modLog){
 	log = modLog;
 	log.write("Module Dir: " + GLOBAL["settings"].path.modules, "", 2);
@@ -158,6 +162,7 @@ exports.loadModules = function(module_dir, modLog){
 	
 	return modules;
 }
+
 exports.load_modules = function(module_dir, mod_log){
 	log = mod_log;
 	log.start_task_time("Loading external modules", "", 2);

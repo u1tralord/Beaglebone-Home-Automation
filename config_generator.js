@@ -171,4 +171,9 @@ forecast_weather.update_rate = 1000;
 forecast_weather.timeout = 5000;
 forecast_weather.API_key = account_info.forecastio.API_key;
 
+forecast_weather.locations = {};
+forecast_weather.locations.default = "Loganville";
+forecast_weather.locations["Loganville"] = [33.837855, -83.901818];
+forecast_weather.locations["Atlanta"] = [33.776509, -84.373152];
+
 saveConfig(path.join(settings.path.configs, "forecast_weather"), forecast_weather);
