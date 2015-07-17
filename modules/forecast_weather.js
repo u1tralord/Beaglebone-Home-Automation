@@ -44,9 +44,12 @@ ForecastWeather.prototype.update = function(thisEmitter) {
 	forecast = thisEmitter.forecast;
 	
 	//34.038643, -83.829686
+	var options = {
+	  exclude: 'flags,alerts'
+	};
 	var location = settings.locations['current'] != null ? settings.locations['current'] : settings.locations[settings.locations.default];
 	console.log(location);
-	forecast.get(location[0], location[1], function (err, res, data) {
+	forecast.get(location[0], location[1], options, function (err, res, data) {
 		if (err) throw err;
 		console.log('Getting data from forecast.io');
 		//console.log('data: ' + util.inspect(data));
