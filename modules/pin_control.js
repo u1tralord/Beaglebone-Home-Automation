@@ -29,6 +29,12 @@ PinController.prototype.execCommand = function(commandArgs){
 	}
 }
 
+PinController.prototype.execRequest = function(commandArgs){
+	if(this.running){
+		this.log.write("Processing request: " + JSON.stringify(commandArgs), "", 1);
+	}
+}
+
 PinController.prototype.close = function(){
 	this.running = false;
 	

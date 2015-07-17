@@ -32,6 +32,13 @@ CommandProcessor.prototype.loadModules = function(){
 				processCommand(modules, args);
 			}
 		});
+		
+		modules[moduleName].on('request', function(args){
+			if(args.hasOwnProperty('request') && args.hasOwnProperty('target')){
+				log.write("Request received: "+ JSON.stringify(args), "", 3);
+				processRequest(modules, args);
+			}
+		});
 		modules[moduleName].init();
 	}
 }
@@ -42,7 +49,12 @@ CommandProcessor.prototype.processCommand = function(modules, args){
 			modules[mName].execCommand(args);
 		}
 	}
-	//if(moduleAcceptsCommand(modules[moduleName], args.command)){}
+}
+
+CommandProcessor.prototype.processCommand = function(modules, args){
+	if(modules[args.target] != null){
+		modules[args.target].execRequest(args);
+	}
 }
 
 function moduleAcceptsCommand(module, command){

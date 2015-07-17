@@ -143,6 +143,7 @@ pin_control.pin_map["ledBlue"] = {pin:"P9_22", output:true, pwmEnabled: false, v
 saveConfig(path.join(settings.path.configs, "pin_control"), pin_control);
 
 
+//
 var pushbullet = {};
 pushbullet.config_name = "pushbullet";
 pushbullet.acceptedCommands = ["sendPush"];
@@ -159,3 +160,15 @@ pushbullet.devices.Firefox = "sjz0AKYrZV6";
 
 pushbullet.API_key = account_info.pushbullet.API_key;
 saveConfig(path.join(settings.path.configs, "pushbullet"), pushbullet);
+
+
+//
+var forecast_weather = {};
+forecast_weather.config_name = "forecast_weather";
+forecast_weather.acceptedCommands = [];
+
+forecast_weather.update_rate = 1000;
+forecast_weather.timeout = 5000;
+forecast_weather.API_key = account_info.forecastio.API_key;
+
+saveConfig(path.join(settings.path.configs, "forecast_weather"), forecast_weather);

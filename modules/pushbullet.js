@@ -49,6 +49,12 @@ PushBulletClient.prototype.execCommand = function(commandArgs){
 	}
 }
 
+PushBulletClient.prototype.execRequest = function(commandArgs){
+	if(this.running){
+		this.log.write("Processing request: " + JSON.stringify(commandArgs), "", 1);
+	}
+}
+
 PushBulletClient.prototype.close = function(){
 	this.running = false;
 	this.stream.close();

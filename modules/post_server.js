@@ -66,6 +66,12 @@ PostServer.prototype.execCommand = function(commandArgs){
 	}
 }
 
+PostServer.prototype.execRequest = function(commandArgs){
+	if(this.running){
+		this.log.write("Processing request: " + JSON.stringify(commandArgs), "", 1);
+	}
+}
+
 PostServer.prototype.close = function(){
 	this.running = false;
 	this.log.write_time("Server shutting down", "", 2);
