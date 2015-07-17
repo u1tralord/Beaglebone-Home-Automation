@@ -80,6 +80,12 @@ function isModule(module){
 	}
 	////////////////////
 	
+	if(typeof module.execRequest != 'function'){
+		module.log.write_err("Missing function: execRequest()");
+		validModule = false;
+	}
+	////////////////////
+	
 	if(typeof module.close != 'function'){
 		module.log.write_err("Missing function: close()");
 		validModule = false;
