@@ -96,6 +96,26 @@ settings.logger.log_priority_level = false;
 saveConfig(path.join(settings.path.configs, "/settings"), settings);
 
 
+var post_server = {};
+post_server.config_name = "post_server";
+post_server.acceptedCommands = [];
+
+post_server.ip = settings.post.ip || getLocalIp();
+post_server.port = settings.post.port || 4040;
+
+saveConfig(path.join(settings.path.configs, "post_server"), post_server);
+
+
+var web_server = {};
+web_server.config_name = "web_server";
+web_server.acceptedCommands = [];
+
+web_server.ip = settings.web.ip || getLocalIp();
+web_server.port = settings.web.port || 8000;
+web_server.clientPath = settings.path.client || './client/';
+
+saveConfig(path.join(settings.path.configs, "web_server"), web_server);
+
 
 //Value map for the pins and their keywords
 /*

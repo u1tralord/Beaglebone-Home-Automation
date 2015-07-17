@@ -36,12 +36,12 @@ PushBulletClient.prototype.init = function(){
 	
 	this.stream.connect();
 	this.running = true;
-	this.log.write("Pushbullet is listening", "", 3);
+	this.log.write_time("Pushbullet is listening", "", 3);
 }
 
 PushBulletClient.prototype.execCommand = function(commandArgs){
 	if(running){
-		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
+		this.log.write_time("Processing command: " + JSON.stringify(commandArgs), "", 1);
 	}
 }
 
@@ -68,7 +68,7 @@ PushBulletClient.prototype.listenForPush = function(){
 				if(title = settings.push_command_code){
 					if(settings.approved_users.indexOf(push.source_user_iden) > -1){
 						var args = parse_push_data(body);
-						log.write("Push: " + JSON.stringify(args), "", 4);
+						log.write_time("Push: " + JSON.stringify(args), "", 4);
 						thisEmitter.emit('command', args);
 					}
 					else
@@ -85,7 +85,7 @@ PushBulletClient.prototype.listenForConnect = function(){
 	var log = this.log;
 	var thisEmitter = this;
 	this.stream.on('connect', function(){
-		log.write("Stream connected", "", 3);
+		log.write_time("Stream connected", "", 3);
 	});
 }
 

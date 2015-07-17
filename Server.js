@@ -15,9 +15,8 @@ var path = require('path');
 
 var logger = require('./core/logger.js');
 var module_loader = require('./core/module_loader.js');
-var ioserver = require('./core/IO_server.js');
 var command_processor = require('./core/command_processor.js');
-//__filename, __dirname
+
 var module_name = path.basename(module.filename, path.extname(module.filename));
 GLOBAL["settings"] = module_loader.load_json("./config/settings.config");
 GLOBAL["settings"].root_dir = __dirname;
@@ -29,27 +28,18 @@ GLOBAL.core_log = logger.create_log(
 var server_log = logger.create_log(
 	path.join(GLOBAL["settings"].path.logs, "SERVER.log"), "SERVER" , 4
 );
-var module_loader_log = logger.create_log(
-	path.join(GLOBAL["settings"].path.logs, "MODULE_LOADER.log"), "MODULE_LOADER" , 4
-);
-var postServer_log = logger.create_log(
-	path.join(GLOBAL["settings"].path.logs, "POST_SERVER.log"),"POST_SERVER" , 4
-);
-var webServer_log = logger.create_log(
-	path.join(GLOBAL["settings"].path.logs, "WEB_SERVER.log"),"WEB_SERVER" , 4
-);
 var commandProcessor_log = logger.create_log(
 	path.join(GLOBAL["settings"].path.logs, "COMMAND_PROCESSOR.log"),"COMMAND_PROCESSOR" , 4
 );
 
-var postServer = ioserver.createPostServer(postServer_log);
-var webServer = ioserver.createWebServer(webServer_log, GLOBAL["settings"].path.client);
+//var postServer = ioserver.createPostServer(postServer_log);
+//var webServer = ioserver.createWebServer(webServer_log, GLOBAL["settings"].path.client);
 var commandProcessor = command_processor.getCommandProcessor(commandProcessor_log);
 
-postServer.start(GLOBAL["settings"].post.ip, GLOBAL["settings"].post.port);
-webServer.start(GLOBAL["settings"].web.ip, GLOBAL["settings"].web.port);
+//postServer.start(GLOBAL["settings"].post.ip, GLOBAL["settings"].post.port);
+//webServer.start(GLOBAL["settings"].web.ip, GLOBAL["settings"].web.port);
 
-commandProcessor.loadModules(module_loader_log);
+commandProcessor.loadModules();
 //modules = module_loader.load_modules(GLOBAL["settings"].path.modules, module_loader_log);
 
 /*

@@ -10,20 +10,25 @@ exports.getCommandProcessor = function(log){
 	return new CommandProcessor(log);
 }
 
-function CommandProcessor(log){
+function CommandProcessor(log, module_loader_log){
 	this.log = log;
+	this.module_loader_log = logger.create_log(
+		path.join(GLOBAL["settings"].path.logs, "MODULE_LOADER.log"), 
+		"MODULE_LOADER" , 
+		4);
 	this.modules = [];
 }
 
-CommandProcessor.prototype.loadModules = function(module_loader_log){
-	this.modules = module_loader.loadModules(GLOBAL["settings"].path.modules, module_loader_log);
+CommandProcessor.prototype.loadModules = function(){
+	this.modules = module_loader.loadModules(GLOBAL["settings"].path.modules, this.module_loader_log);
 	var processCommand = this.processCommand;
 	var modules = this.modules;
-		
+	var log = this.log;
+
 	for(var moduleName in this.modules){		
 		modules[moduleName].on('command', function(args){
 			if(args.hasOwnProperty('command')){
-				this.log.write("Command received: "+ JSON.stringify(args), "", 3);
+				log.write("Command received: "+ JSON.stringify(args), "", 3);
 				processCommand(modules, args);
 			}
 		});

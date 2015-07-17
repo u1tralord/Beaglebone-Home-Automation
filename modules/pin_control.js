@@ -1,4 +1,3 @@
-var PushBullet = require('pushbullet');
 var events = require('events');
 var util = require('util');
 
