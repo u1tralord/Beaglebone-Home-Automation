@@ -3,7 +3,7 @@ var util = require('util');
 var http = require('http');
 var fs = require('fs');
 
-exports.createModule = function(log, settings, moduleName){
+exports.Module = function(log, settings, moduleName){
 	if(log != null && settings != null && moduleName != null){
 		return new PostServer(log, settings, moduleName);
 	}

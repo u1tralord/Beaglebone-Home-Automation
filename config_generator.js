@@ -167,8 +167,9 @@ var forecast_weather = {};
 forecast_weather.config_name = "forecast_weather";
 forecast_weather.acceptedCommands = [];
 
-forecast_weather.update_rate = 1000;
-forecast_weather.timeout = 5000;
+//Ten Minutes: 10 * (1000*60)
+forecast_weather.update_rate = 10 * (1000*60);                      //in milliseconds
+forecast_weather.timeout = 5000;                                    //in milliseconds
 forecast_weather.API_key = account_info.forecastio.API_key;
 
 forecast_weather.locations = {};

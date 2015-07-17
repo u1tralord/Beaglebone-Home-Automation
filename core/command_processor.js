@@ -6,7 +6,7 @@ var logger = require('./logger.js');
 var module_name = path.basename(module.filename, path.extname(module.filename));
 
 
-exports.getCommandProcessor = function(log){
+exports.CommandProcessor = function(log){
 	return new CommandProcessor(log);
 }
 

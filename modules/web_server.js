@@ -8,7 +8,7 @@ var path = require('path');
 var serveStatic = require('serve-static');
 var util = require('util');
 
-exports.createModule = function(log, settings, moduleName){
+exports.Module = function(log, settings, moduleName){
 	if(log != null && settings != null && moduleName != null){
 		return new WebServer(log, settings, moduleName);
 	}

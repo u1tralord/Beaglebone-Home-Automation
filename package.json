@@ -21,6 +21,7 @@
     "serve-static": "*",
 	"express": "*",
 	"body-parser": "*",
-	"pushbullet": "*"
+	"pushbullet": "*",
+	"forecast.io": "*"
   }
 }

@@ -2,7 +2,7 @@ var Forecast = require('forecast.io');
 var events = require('events');
 var util = require('util');
 
-exports.createModule = function(log, settings, moduleName){
+exports.Module = function(log, settings, moduleName){
 	if(log != null && settings != null && moduleName != null){
 		return new ForecastWeather(log, settings, moduleName);
 	}

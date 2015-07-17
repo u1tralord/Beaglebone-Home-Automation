@@ -2,7 +2,7 @@ var PushBullet = require('pushbullet');
 var events = require('events');
 var util = require('util');
 
-exports.createModule = function(log, settings, moduleName){
+exports.Module = function(log, settings, moduleName){
 	if(log != null && settings != null && moduleName != null){
 		return new PushBulletClient(log, settings, moduleName);
 	}

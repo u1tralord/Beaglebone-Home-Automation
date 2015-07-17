@@ -52,7 +52,7 @@ exports.load_configs = function(){
 }
 
 function createModuleLog(moduleName){
-	var moduleLog = logger.create_log(
+	var moduleLog = logger.Log(
 		path.join(GLOBAL["settings"].path.logs, moduleName + ".log"), moduleName.toUpperCase() , 4
 	);	
 	return moduleLog;
@@ -134,7 +134,7 @@ exports.loadModules = function(module_dir, modLog){
 			var moduleLoaded = false;
 			
 			var moduleFile = require(module_dir + file);
-			if(typeof moduleFile.createModule == 'function')
+			if(typeof moduleFile.Module == 'function')
 			{
 				log.write("Loading Module Config: " + moduleName + ".config", "", 3);
 				var moduleSettings = loadConfig(moduleName);
@@ -143,7 +143,7 @@ exports.loadModules = function(module_dir, modLog){
 					log.write("Generating Module Log: " + moduleName + ".log", "", 3);
 					var moduleLog = createModuleLog(moduleName);
 					
-					var module = moduleFile.createModule(moduleLog, moduleSettings, moduleName);
+					var module = moduleFile.Module(moduleLog, moduleSettings, moduleName);
 					if(isModule(module))
 					{
 						modules[moduleName] = module;
@@ -160,39 +160,5 @@ exports.loadModules = function(module_dir, modLog){
 	});
 	log.end_task_time("Modules finished loading", "", 2);
 	
-	return modules;
-}
-
-exports.load_modules = function(module_dir, mod_log){
-	log = mod_log;
-	log.start_task_time("Loading external modules", "", 2);
-	log.write("Module Dir: " + GLOBAL["settings"].path.modules, "", 2);
-	var modules = {};
-	
-	fs.readdirSync(module_dir).forEach(function(file){
-		if(file.indexOf(".js") > -1){	
-			var module_name = file.replace(".js", "");
-			log.start_task("Loading Module " + module_name, "", 3);
-			
-			modules[module_name] = require(module_dir + file);
-
-			//Check if module has "init()" function
-			if(typeof modules[module_name].init == 'function'){
-				log.write("Generating Module log: " + module_name + ".log", "", 3);
-				
-				var mod_log = logger.create_log(
-					path.join(GLOBAL["settings"].path.logs, module_name + ".log"), module_name.toUpperCase() , 4
-				);
-				
-				log.write("Calling " + module_name + ".init()", "", 2);
-				
-				log.start_task("","",4);
-				modules[module_name].init(mod_log);
-				log.end_task("","",4);
-			}
-			log.end_task("Module Loaded", "", 2);
-		}
-	});
-	log.end_task_time("Modules successfully loaded", "", 2);
 	return modules;
 }

@@ -20,16 +20,10 @@ var module_name = path.basename(module.filename, path.extname(module.filename));
 GLOBAL["settings"] = module_loader.load_json("./config/settings.config");
 GLOBAL["settings"].root_dir = __dirname;
 
-GLOBAL.core_log = logger.create_log(
-	path.join(GLOBAL["settings"].path.logs, "CORE.log"), "CORE_SERVER", 4
-);
+GLOBAL.core_log = logger.Log(path.join(GLOBAL["settings"].path.logs, "CORE.log"), "CORE_SERVER", 4);
 
-var server_log = logger.create_log(
-	path.join(GLOBAL["settings"].path.logs, "SERVER.log"), "SERVER" , 4
-);
-var commandProcessor_log = logger.create_log(
-	path.join(GLOBAL["settings"].path.logs, "COMMAND_PROCESSOR.log"),"COMMAND_PROCESSOR" , 4
-);
+var server_log = logger.Log(path.join(GLOBAL["settings"].path.logs, "SERVER.log"), "SERVER" , 4);
+var commandProcessor_log = logger.Log(path.join(GLOBAL["settings"].path.logs, "COMMAND_PROCESSOR.log"),"COMMAND_PROCESSOR" , 4);
 
-var commandProcessor = command_processor.getCommandProcessor(commandProcessor_log);
+var commandProcessor = command_processor.CommandProcessor(commandProcessor_log);
 commandProcessor.loadModules();

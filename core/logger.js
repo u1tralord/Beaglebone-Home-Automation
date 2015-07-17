@@ -36,6 +36,10 @@ function get_indent(indent_count){
 	return indent;
 }
 
+exports.Log = function(path, module, log_level){
+	return new Log(path, module, log_level);
+}
+
 function Log(path, module, log_level){
 	this.indent = 0;
 	this.path = path;
