@@ -16,7 +16,7 @@ function CommandProcessor(log, module_loader_log){
 		path.join(GLOBAL["settings"].path.logs, "MODULE_LOADER.log"), 
 		"MODULE_LOADER" , 
 		4);
-	this.modules = [];
+	this.modules = {};
 }
 
 CommandProcessor.prototype.loadModules = function(){
@@ -37,12 +37,14 @@ CommandProcessor.prototype.loadModules = function(){
 }
 
 CommandProcessor.prototype.processCommand = function(modules, args){
-	
-	for(var moduleName in this.modules){
-		console.log(modules[moduleName]);
-		if(modules[moduleName].acceptedCommands.indexOf(args.command) > -1)
-		{
-			console.log("SENDING COMMAND TO: " + moduleName);
+	for(var mName in modules) {
+		if(moduleAcceptsCommand(modules[mName], args.command)){
+			modules[mName].execCommand(args);
 		}
 	}
+	//if(moduleAcceptsCommand(modules[moduleName], args.command)){}
+}
+
+function moduleAcceptsCommand(module, command){
+	return (module.acceptedCommands.indexOf(command) > -1)
 }

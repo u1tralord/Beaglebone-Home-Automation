@@ -37,7 +37,7 @@ WebServer.prototype.init = function(){
 }
 
 WebServer.prototype.execCommand = function(commandArgs){
-	if(running){
+	if(this.running){
 		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
 	}
 }

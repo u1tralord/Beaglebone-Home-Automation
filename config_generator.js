@@ -145,7 +145,7 @@ saveConfig(path.join(settings.path.configs, "pin_control"), pin_control);
 
 var pushbullet = {};
 pushbullet.config_name = "pushbullet";
-pushbullet.acceptedCommands = [];
+pushbullet.acceptedCommands = ["sendPush"];
 
 pushbullet.approved_users = ["ujy5M3deHjE"];
 pushbullet.push_command_code = "$(9028)";

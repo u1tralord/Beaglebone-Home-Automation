@@ -24,7 +24,7 @@ PinController.prototype.init = function(){
 }
 
 PinController.prototype.execCommand = function(commandArgs){
-	if(running){
+	if(this.running){
 		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
 	}
 }

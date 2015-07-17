@@ -37,11 +37,11 @@ PushBulletClient.prototype.init = function(){
 	this.running = true;
 	this.log.write_time("Pushbullet is listening", "", 3);
 
-	this.sendPush({type:'note', deviceName:'LGG3', title:'Test', body:'Test Body'});
+	//this.sendPush({type:'note', deviceName:'LGG3', title:'Test', body:'Test Body'});
 }
 
 PushBulletClient.prototype.execCommand = function(commandArgs){
-	if(running){
+	if(this.running){
 		if(commandArgs.command == 'sendPush')
 			this.sendPush(commandArgs);
 
