@@ -178,3 +178,37 @@ forecast_weather.locations["Loganville"] = [33.837855, -83.901818];
 forecast_weather.locations["Atlanta"] = [33.776509, -84.373152];
 
 saveConfig(path.join(settings.path.configs, "forecast_weather"), forecast_weather);
+
+
+//
+var voice = {};
+voice.config_name = "voice";
+voice.acceptedCommands = ["processVoice"];
+
+voice.modules = [
+	{
+		moduleName:"pushbullet",
+		commands:[
+			{
+				commandName:"sendPush",
+				args:[
+					{argFormat:"", valFormat:""}
+				]
+			},
+		]
+	},
+
+	{
+		moduleName:"pin_control",
+		commands:[
+			{
+				commandName:"ledControl",
+				args:[
+					{argFormat:"led[%d,0:4]", valFormat:"[%d]"}
+				]
+			},
+		]
+	},
+];
+
+saveConfig(path.join(settings.path.configs, "voice"), voice);

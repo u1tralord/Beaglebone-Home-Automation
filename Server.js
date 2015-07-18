@@ -27,3 +27,4 @@ var commandProcessor_log = logger.Log(path.join(GLOBAL["settings"].path.logs, "C
 
 var commandProcessor = command_processor.CommandProcessor(commandProcessor_log);
 commandProcessor.loadModules();
+commandProcessor.testCommand({command:'processVoice', voiceText:'This is a test voice command'});

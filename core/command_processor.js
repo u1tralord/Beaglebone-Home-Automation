@@ -51,10 +51,14 @@ CommandProcessor.prototype.processCommand = function(modules, args){
 	}
 }
 
-CommandProcessor.prototype.processCommand = function(modules, args){
+CommandProcessor.prototype.processRequest = function(modules, args){
 	if(modules[args.target] != null){
 		modules[args.target].execRequest(args);
 	}
+}
+
+CommandProcessor.prototype.testCommand = function(commandArgs){
+	this.processCommand(this.modules, commandArgs);
 }
 
 function moduleAcceptsCommand(module, command){
