@@ -25,6 +25,7 @@ VoiceProcessor.prototype.init = function(){
 	this.settings.modules.forEach(function(module){
 		module.commands.forEach(function(commmand){
 
+			classifier.addDocument(module.moduleName, commmand.commandName);
 			classifier.addDocument(commmand.commandName, commmand.commandName);
 			classifier.addDocument(splitCamelCase(commmand.commandName), commmand.commandName);
 			commmand.args.forEach(function(arg){
@@ -38,7 +39,7 @@ VoiceProcessor.prototype.init = function(){
 	});
 	classifier.train();
 
-	var term = "push";
+	var term = "pushbullet";
 	console.log(term + " : " + classifier.classify(term));
 
 	this.classifier = classifier;
