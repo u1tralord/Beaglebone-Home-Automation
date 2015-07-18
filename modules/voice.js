@@ -39,9 +39,6 @@ VoiceProcessor.prototype.init = function(){
 	});
 	classifier.train();
 
-	var term = "pushbullet";
-	console.log(term + " : " + classifier.classify(term));
-
 	this.classifier = classifier;
 	this.running = true;
 }
@@ -68,8 +65,13 @@ VoiceProcessor.prototype.close = function(){
 }
 
 VoiceProcessor.prototype.processVoice = function(commandArgs){
-	console.log("YOU SAID: " + commandArgs.voiceText);
+	var classifier = this.classifier;
 
+	console.log("YOU SAID: " + commandArgs.voiceText);
+	commandArgs.voiceText.split(' ').forEach(function(term){
+		console.log(term + " : " + classifier.classify(term));
+	});
+	
 }
 
 function splitCamelCase(str){
