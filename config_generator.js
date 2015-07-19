@@ -77,7 +77,7 @@ settings.web = {};
 settings.post = {};
 settings.logger = {};
 
-settings.path.client = path.join(__dirname, "client/");
+settings.path.client = './data/web_server/client/';
 settings.path.logs = path.join(__dirname, "logs/");
 settings.path.configs = path.join(__dirname, "config/");
 settings.path.modules = path.join(__dirname, "modules/");
@@ -112,7 +112,7 @@ web_server.acceptedCommands = [];
 
 web_server.ip = settings.web.ip || getLocalIp();
 web_server.port = settings.web.port || 8000;
-web_server.clientPath = settings.path.client || './client/';
+web_server.clientPath = settings.path.client || './data/web_server/client/';
 
 saveConfig(path.join(settings.path.configs, "web_server"), web_server);
 

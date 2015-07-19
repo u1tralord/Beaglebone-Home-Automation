@@ -1,0 +1,92 @@
+*{
+    font-family: segoe ui;
+    font-size: 1.05em;
+    font-weight: lighter;
+    color: #fff;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    border:0;
+}
+#control-panel{
+    width: 100vw;
+    height: 100vh;
+    background-color: #1d2128;
+}
+.panel-screen{
+    width:100vw;
+    height:100vh;
+}
+.panel-titlebar{
+    background: #00f;
+    height: 10vh;
+    background: #201b21;
+}
+.panel-title{
+    display: inline-block;
+    height: 100%;
+    padding-left: 2vw;
+}
+.panel-title h1{
+    font-size: 1em;
+}
+.panel-body{
+    background: #0f0;
+    height: 90vh;
+    background-color: #1d2128;
+}
+.tile-group{
+    display: inline-block;
+    /*position: relative;
+    left: 50%;
+    transform: translateX(-50%);*/
+}
+.tile{
+    font-family: segoe ui;
+    font-size: 1.05em;
+    font-weight: lighter;
+    color: #fff;
+    
+    width: 40vw;
+    height: 40vw;
+    max-width: 45vw;
+    max-height: 44.5vw;
+    
+    margin-top: 10px;
+    margin-left: 10px;
+    outline: none;
+    border: none;
+    background-color: #2573dc;
+}
+.tile:active{
+    background-color: #cc5c00;
+}
+.back-button{
+    width: 8vh;
+    height: 8vh;
+    margin: 1vh;
+    border: 2px solid #fff;
+    border-radius: 4vh;
+    outline: none;
+    background-color: Transparent;
+}
+.back-button:active{
+    background: #fff
+}
+.hamburger{
+    display: inline-block;
+}
+.hamburger-slice{
+    width: 5vh;
+    height: .75vh;
+    background: #fff;
+    margin-bottom: .5vh;
+}
+.colored-padding{
+    background-image: linear-gradient(#ff0, #ff0), 
+        linear-gradient(red, red);
+    background-clip: content-box, padding-box;
+}
+}
