@@ -1,27 +1,35 @@
 {
-  "name": "BeagleBone Home Automation",
+  "name": "beaglebone-home-automation",
   "version": "0.0.1",
-  "description": "Home automation server to run on a Beaglebone Black",
-  "author": "Jacob Poston <http://u1tralord.github.io/>",
-  
-  "contributors": [{
-    "name": "Jacob Poston",
-    "email": "poston.jacob@gmail.com"
-  }],
-  
-  "main": "Server.js",
-  
+  "description": "A modular home automation program designed for the Beaglebone black.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/u1tralord/Beaglebone-Home-Automation"
+    "url": "git+https://github.com/u1tralord/Beaglebone-Home-Automation.git"
   },
-  
+  "keywords": [
+    "beaglebone",
+    "nodejs",
+    "home",
+    "automation",
+    "control"
+  ],
+  "author": "Jacob Poston",
+  "license": "MIT",
   "dependencies": {
-    "connect": "*",
-    "serve-static": "*",
-	"express": "*",
-	"body-parser": "*",
-	"pushbullet": "*",
-	"forecast.io": "*"
-  }
+    "connect": "",
+    "serve-static": "",
+	"express": "",
+	"body-parser": "",
+	"pushbullet": "",
+	"forecast.io": ""
+  },
+  "bugs": {
+    "url": "https://github.com/u1tralord/Beaglebone-Home-Automation/issues"
+  },
+  "homepage": "https://github.com/u1tralord/Beaglebone-Home-Automation#readme"
 }

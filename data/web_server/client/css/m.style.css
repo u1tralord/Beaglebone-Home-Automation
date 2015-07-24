@@ -18,6 +18,10 @@ body{
 .panel-screen{
     width:100vw;
     height:100vh;
+	display:none;
+}
+.panel-screen.active-panel{
+	display:inline;
 }
 .panel-titlebar{
     background: #00f;

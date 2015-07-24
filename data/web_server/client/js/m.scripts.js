@@ -21,3 +21,10 @@ function calculateTileSize()
         $(this).height(squareSize);
     });
 }
+
+$(".tab-nav").click(function() {
+  $( ".panel-screen" ).each(function() {
+    $( this ).removeClass( "active-panel" );
+  });
+  $("#"+$(this).attr('linkTo')).addClass("active-panel");
+});
