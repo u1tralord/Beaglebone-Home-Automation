@@ -1,5 +1,6 @@
 var events = require('events');
 var util = require('util');
+var bonescript = require('bonescript');
 
 exports.Module = function(log, settings, moduleName){
 	if(log != null && settings != null && moduleName != null){
@@ -20,6 +21,20 @@ util.inherits(PinController, events.EventEmitter);
 
 PinController.prototype.init = function(){
 	
+	//Initialize Pin States
+	var pin_map = this.settings.pin_map;
+	for(pinID in pin_map)
+	{
+		bonescript.pinMode(pinID, pin_map[pinID].isOutput ? bonescript.OUTPUT : bonescript.INPUT);
+		pin_control.pin_map[pinID].pwmEnabled = this.settings.pwmAvailable.indexOf(pinID) > -1;
+	}
+	
+	thist.outputUpdater = setInterval(function(){
+		for(pinID in pin_map){
+			this.setPinState(pinID, pin_map[pinID].value, pin_map[pinID].pwmEnabled);
+		}
+	}, this.settings.update_rate);
+	
 	this.running = true;
 }
 
@@ -37,5 +52,13 @@ PinController.prototype.execRequest = function(commandArgs){
 
 PinController.prototype.close = function(){
 	this.running = false;
-	
+}
+
+PinController.setPinState = function(pinID, value, pwmEnabled){
+	if(value >= 0 && value <= 1){
+		if(pwmEnabled)
+			bonescript.analogWrite(pinID, value, 2000);
+		else
+			bonescript.digitalWrite(pinID, Math.round(value));
+	}
 }

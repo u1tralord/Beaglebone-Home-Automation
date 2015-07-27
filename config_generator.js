@@ -132,16 +132,15 @@ pin_control.update_rate = 1000/30;
 pin_control.acceptedCommands = ["ledControl"];
 
 pin_control.pin_map = {};
-pin_control.pwm = ["P8_13", "P8_19", "P8_34", "P8_36", "P8_45", "P8_46", "P9_14", "P9_16", "P9_21", "P9_22", "P9_28", "P9_29", "P9_31", "P9_42"];
-pin_control.pin_map["led0"] = {pin:"USR0", output:true, pwmEnabled: false, value:0};
-pin_control.pin_map["led1"] = {pin:"USR1", output:true, pwmEnabled: false, value:0};
-pin_control.pin_map["led2"] = {pin:"USR2", output:true, pwmEnabled: false, value:0};
-pin_control.pin_map["led3"] = {pin:"USR3", output:true, pwmEnabled: false, value:0};
-pin_control.pin_map["ledRed"] = {pin:"P9_14)", output:true, pwmEnabled: false, value:0};
-pin_control.pin_map["ledGreen"] = {pin:"P9_16", output:true, pwmEnabled: false, value:0};
-pin_control.pin_map["ledBlue"] = {pin:"P9_22", output:true, pwmEnabled: false, value:0};
+pin_control.pwmAvailable = ["P8_13", "P8_19", "P8_34", "P8_36", "P8_45", "P8_46", "P9_14", "P9_16", "P9_21", "P9_22", "P9_28", "P9_29", "P9_31", "P9_42"];
+pin_control.pin_map["USR0"] = {label:"led0", isOutput:true, value:0};
+pin_control.pin_map["USR1"] = {label:"led1", isOutput:true, value:0};
+pin_control.pin_map["USR2"] = {label:"led2", isOutput:true, value:0};
+pin_control.pin_map["USR3"] = {label:"led3", isOutput:true, value:0};
+pin_control.pin_map["P9_14"] = {label:"ledRed", isOutput:true, value:0};
+pin_control.pin_map["P9_16"] = {label:"ledGreen", isOutput:true, value:0};
+pin_control.pin_map["P9_22"] = {label:"ledBlue", isOutput:true, value:0};
 saveConfig(path.join(settings.path.configs, "pin_control"), pin_control);
-
 
 //
 var pushbullet = {};
