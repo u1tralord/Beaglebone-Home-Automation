@@ -67,11 +67,12 @@ VoiceProcessor.prototype.close = function(){
 VoiceProcessor.prototype.processVoice = function(commandArgs){
 	var classifier = this.classifier;
 
-	console.log("YOU SAID: " + commandArgs.voiceText);
-	commandArgs.voiceText.split(' ').forEach(function(term){
-		console.log(term + " : " + classifier.classify(term));
-	});
+	this.log.write("YOU SAID: " + commandArgs.voiceText, "", 3);
+	/*commandArgs.voiceText.split(' ').forEach(function(term){
+		this.log.write(term + " : " + classifier.classify(term), "", 4);
+	}.bind(this));*/
 	
+	this.log.write("OVERALL: " + classifier.classify(commandArgs.voiceText), "", 3);
 }
 
 function splitCamelCase(str){

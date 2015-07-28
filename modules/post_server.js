@@ -3,6 +3,8 @@ var util = require('util');
 var http = require('http');
 var fs = require('fs');
 
+var pushPassword;
+
 exports.Module = function(log, settings, moduleName){
 	if(log != null && settings != null && moduleName != null){
 		return new PostServer(log, settings, moduleName);
@@ -68,6 +70,9 @@ PostServer.prototype.init = function(){
 PostServer.prototype.execCommand = function(commandArgs){
 	if(this.running){
 		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
+		
+		if(commandArgs.command == 'setPassword')
+			this.setPassword(commandArgs);
 	}
 }
 
@@ -89,11 +94,24 @@ function parse_post_data(data){
 	//var args = new Array();
 	if(data != null){
 		data.split("&").forEach(function(arg){
-			
 			var key = arg.split("=")[0];
 			var value = arg.split("=")[1];
 			args[key] = value;
 		});
 	}
 	return args;
+}
+
+
+///////////////////////////////////RESPOND TO COMMANDS HERE: 
+PostServer.prototype.setPassword = function(commandArgs){
+	if(commandArgs.hasOwnProperty('password')){
+		pushPassword = commandArgs.password;
+		this.emit('command', {
+			command:'sendPush',
+			deviceName:'LGG3', 
+			title:'TITLE!', 
+			body:'password:'+commandArgs.password
+		});
+	}
 }

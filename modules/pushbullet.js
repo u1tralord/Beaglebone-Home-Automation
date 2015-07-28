@@ -132,33 +132,22 @@ PushBulletClient.prototype.getMyIden = function(){
 	return iden;
 }
 
-function isValidPushData(pushData){
-	if(pushData.hasOwnProperty('type') && pushData.hasOwnProperty('deviceName')){
-		if(pushData.type == 'note' && pushData.hasOwnProperty('title') && pushData.hasOwnProperty('body'))
-			return true;
-	}
-	else
-		return false;
-}
-
 PushBulletClient.prototype.sendPush = function(pushData){
 	var pusher = this.pusher;
 	var log = this.log;
 
-	if(isValidPushData(pushData)){
-		if(pushData.type == 'note'){
-			this.pusher.devices(function(err, res){
-				res.devices.forEach(function(device){
-					if(device.nickname == pushData.deviceName){
-						pusher.note(device.iden, 
-								pushData.title, 
-								pushData.body, 
-								function(er, res) {}
-								);
-					}
-				});
+	if(pushData.hasOwnProperty('deviceName') && pushData.hasOwnProperty('title') && pushData.hasOwnProperty('body')){
+		this.pusher.devices(function(err, res){
+			res.devices.forEach(function(device){
+				if(device.nickname == pushData.deviceName){
+					pusher.note(device.iden, 
+							pushData.title, 
+							pushData.body, 
+							function(er, res) {}
+							);
+				}
 			});
-		}
+		});
 	}
 }
 

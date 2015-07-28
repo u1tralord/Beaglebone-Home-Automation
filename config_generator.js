@@ -98,7 +98,7 @@ saveConfig(path.join(settings.path.configs, "/settings"), settings);
 
 var post_server = {};
 post_server.config_name = "post_server";
-post_server.acceptedCommands = [];
+post_server.acceptedCommands = ["setPassword"];
 
 post_server.ip = settings.post.ip || getLocalIp();
 post_server.port = settings.post.port || 4040;
@@ -205,6 +205,36 @@ voice.modules = [
 				commandName:"ledControl",
 				args:[
 					{argFormat:"led[%d,0:4]", valFormat:"[%d]"}
+				]
+			},
+			{
+				commandName:"setPinValue",
+				args:[
+					{argFormat:"p[%d,8:10]_[%d,0:24]", valFormat:"[%d]"}
+				]
+			},
+		]
+	},
+	
+	{
+		moduleName:"forecast_weather",
+		commands:[
+			{
+				commandName:"setLoc",
+				args:[
+					{argFormat:"", valFormat:""}
+				]
+			},
+		]
+	},
+	
+	{
+		moduleName:"post_server",
+		commands:[
+			{
+				commandName:"setPassword",
+				args:[
+					{argFormat:"", valFormat:""}
 				]
 			},
 		]
