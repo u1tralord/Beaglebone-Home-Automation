@@ -48,10 +48,10 @@ ForecastWeather.prototype.update = function(thisEmitter) {
 	  exclude: 'flags,alerts'
 	};
 	var location = settings.locations['current'] != null ? settings.locations['current'] : settings.locations[settings.locations.default];
-	console.log(location);
+	log.write("Checking location: " +  location, "", 2);
 	forecast.get(location[0], location[1], options, function (err, res, data) {
 		if (err) throw err;
-		console.log('Getting data from forecast.io');
+		log.write('Getting data from forecast.io', '', 4);
 		//console.log('data: ' + util.inspect(data));
 	});
 }
