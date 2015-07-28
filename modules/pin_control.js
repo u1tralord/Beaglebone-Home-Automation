@@ -29,6 +29,7 @@ PinController.prototype.init = function(){
 		pin_control.pin_map[pinID].pwmEnabled = this.settings.pwmAvailable.indexOf(pinID) > -1;
 	}
 	
+	var writePinState = this.writePinState;
 	this.outputUpdater = setInterval(function(){
 		for(pinID in pin_map){
 			this.writePinState(pinID, pin_map[pinID].value, pin_map[pinID].pwmEnabled);
