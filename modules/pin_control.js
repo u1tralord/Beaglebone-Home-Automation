@@ -26,7 +26,7 @@ PinController.prototype.init = function(){
 	for(pinID in pin_map)
 	{
 		bonescript.pinMode(pinID, pin_map[pinID].isOutput ? bonescript.OUTPUT : bonescript.INPUT);
-		pin_control.pin_map[pinID].pwmEnabled = this.settings.pwmAvailable.indexOf(pinID) > -1;
+		pin_map[pinID].pwmEnabled = this.settings.pwmAvailable.indexOf(pinID) > -1;
 	}
 	
 	var writePinState = this.writePinState;
