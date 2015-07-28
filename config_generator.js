@@ -129,7 +129,7 @@ pinMap["led0"] = {       //Custom label to be used inside the program (Probably 
 var pin_control = {};
 pin_control.config_name = "pin_control";
 pin_control.update_rate = 1000/30;
-pin_control.acceptedCommands = ["ledControl"];
+pin_control.acceptedCommands = ["ledControl", "setPinValue"];
 
 pin_control.pin_map = {};
 pin_control.pwmAvailable = ["P8_13", "P8_19", "P8_34", "P8_36", "P8_45", "P8_46", "P9_14", "P9_16", "P9_21", "P9_22", "P9_28", "P9_29", "P9_31", "P9_42"];
@@ -164,7 +164,7 @@ saveConfig(path.join(settings.path.configs, "pushbullet"), pushbullet);
 //
 var forecast_weather = {};
 forecast_weather.config_name = "forecast_weather";
-forecast_weather.acceptedCommands = [];
+forecast_weather.acceptedCommands = ["setLoc"];
 
 //Twenty Minutes: 20 * (1000*60)
 forecast_weather.update_rate = 20 * (1000*60);                      //in milliseconds
@@ -175,6 +175,7 @@ forecast_weather.locations = {};
 forecast_weather.locations.default = "Loganville";
 forecast_weather.locations["Loganville"] = [33.837855, -83.901818];
 forecast_weather.locations["Atlanta"] = [33.776509, -84.373152];
+forecast_weather.locations["Lawrenceville"] = [33.956745, -83.988990];
 
 saveConfig(path.join(settings.path.configs, "forecast_weather"), forecast_weather);
 

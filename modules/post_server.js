@@ -31,6 +31,11 @@ function PostServer(log, settings, moduleName){
 	            //Grab last line of post request (the line containing commands & args)
 	            var postArgs = parse_post_data(body.split(/\r?\n/)[6]);
 	            log.write_time(JSON.stringify(postArgs), "", 2);
+				
+				log.write("Password Received: " + postArgs.password, "", 4);
+				log.write("Password on File: " + postArgs.password, "", 4);
+				log.write("TODO: Verify Password!", "", 1);
+				
 	            thisEmitter.emit('command', postArgs);
 	        });
 	        req.on('end', function () {

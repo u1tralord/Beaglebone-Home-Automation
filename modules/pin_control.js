@@ -1,6 +1,6 @@
 var events = require('events');
 var util = require('util');
-var bonescript = require('bonescript');
+//var bonescript = require('bonescript');
 
 exports.Module = function(log, settings, moduleName){
 	if(log != null && settings != null && moduleName != null){
@@ -25,26 +25,21 @@ PinController.prototype.init = function(){
 	var pin_map = this.settings.pin_map;
 	for(pinID in pin_map)
 	{
-		bonescript.pinMode(pinID, pin_map[pinID].isOutput ? bonescript.OUTPUT : bonescript.INPUT);
+		//bonescript.pinMode(pinID, pin_map[pinID].isOutput ? bonescript.OUTPUT : bonescript.INPUT);
 		pin_map[pinID].pwmEnabled = this.settings.pwmAvailable.indexOf(pinID) > -1;
 	}
 	
-	var writePinState = this.writePinState;
-	this.outputUpdater = setInterval(function(){
-		for(pinID in pin_map){
-			this.writePinState(pinID, pin_map[pinID].value, pin_map[pinID].pwmEnabled);
-		}
-	}, this.settings.update_rate);
+	this.outputUpdater = setInterval(this.updateOutputs.bind(this), this.settings.update_rate);
 	
 	this.running = true;
 }
 
 PinController.prototype.execCommand = function(commandArgs){
 	if(this.running){
+		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
+		
 		if(commandArgs.command == 'setPinValue')
 			this.setPinValue(commandArgs); //pinName = "", pinValue = x
-
-		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
 	}
 }
 
@@ -57,26 +52,40 @@ PinController.prototype.execRequest = function(commandArgs){
 PinController.prototype.close = function(){
 	this.running = false;
 }
-PinController.setPinValue = function(commandArgs){
-	if(isValidPinData(commandArgs)){
-		for(pinID in this.settings.pin_map){
-			if(pinID == commandArgs.pinName || this.settings.pin_map[pinID].label == commandArgs.pinName)
-				this.settings.pin_map[pinID].value = commandArgs.pinValue;
+
+PinController.prototype.updateOutputs = function(){
+	for(pinID in this.settings.pin_map){
+		if(this.settings.pin_map[pinID].modified){
+			this.writePinState(pinID, this.settings.pin_map[pinID].value, this.settings.pin_map[pinID].pwmEnabled);
+			this.settings.pin_map[pinID].modified = false;
 		}
 	}
 }
-PinController.writePinState = function(pinID, value, pwmEnabled){
+
+PinController.prototype.setPinValue = function(commandArgs){
+	if(isValidPinData(commandArgs)){
+		for(pinID in this.settings.pin_map){
+			if(pinID == commandArgs.pinName || this.settings.pin_map[pinID].label == commandArgs.pinName){ //Use the pin ID or the label given in the config to as the pinName to access this pin
+				this.settings.pin_map[pinID].value = commandArgs.pinValue;
+				this.settings.pin_map[pinID].modified = true;  //This tells updateOutputs() that this pin needs to be updated
+				this.log.write("Setting pin: " + commandArgs.pinName + " to " + commandArgs.pinValue, "", 2);
+			}
+		}
+	}
+}
+PinController.prototype.writePinState = function(pinID, value, pwmEnabled){
 	if(value >= 0 && value <= 1){
 		if(pwmEnabled)
+			console.log('Analog: ' + value)
+		else
+			console.log('Digital: ' + Math.round(value))
+		/*if(pwmEnabled)
 			bonescript.analogWrite(pinID, value, 2000);
 		else
-			bonescript.digitalWrite(pinID, Math.round(value));
+			bonescript.digitalWrite(pinID, Math.round(value));*/
 	}
 }
 
 function isValidPinData(pinData){
-	if(pinData.hasOwnProperty('pinName') && pinData.hasOwnProperty('pinValue'))
-		return true;
-	else
-		return false;
+	return pinData.hasOwnProperty('pinName') && pinData.hasOwnProperty('pinValue');
 }
