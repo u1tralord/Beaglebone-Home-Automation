@@ -21,12 +21,13 @@
   "author": "Jacob Poston",
   "license": "MIT",
   "dependencies": {
-    "connect": "",
-    "serve-static": "",
-	"express": "",
-	"body-parser": "",
-	"pushbullet": "",
-	"forecast.io": ""
+    "connect": "*",
+    "serve-static": "*",
+	"express": "*",
+	"body-parser": "*",
+	"pushbullet": "*",
+	"forecast.io": "*",
+	"natural": "*"
   },
   "bugs": {
     "url": "https://github.com/u1tralord/Beaglebone-Home-Automation/issues"
