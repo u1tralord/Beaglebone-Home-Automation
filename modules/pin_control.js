@@ -54,11 +54,18 @@ PinController.prototype.close = function(){
 }
 
 PinController.prototype.updateOutputs = function(){
+	var pinsModified = false; //Keeps track of if any pins were updated this cycle.
+	
 	for(pinID in this.settings.pin_map){
 		if(this.settings.pin_map[pinID].modified){
 			this.writePinState(pinID, this.settings.pin_map[pinID].value, this.settings.pin_map[pinID].pwmEnabled);
 			this.settings.pin_map[pinID].modified = false;
+			pinsModified = true; 
 		}
+	}
+	
+	if(pinsModified){
+		this.log.write(util.inspect(this.settings.pin_map), "", 4);
 	}
 }
 
@@ -76,9 +83,9 @@ PinController.prototype.setPinValue = function(commandArgs){
 PinController.prototype.writePinState = function(pinID, value, pwmEnabled){
 	if(value >= 0 && value <= 1){
 		if(pwmEnabled)
-			console.log('Analog: ' + value)
+			console.log('Analog write: ' + value + ' to ' + pinID);
 		else
-			console.log('Digital: ' + Math.round(value))
+			console.log('Digital write: ' + Math.round(value) + ' to ' + pinID);
 		/*if(pwmEnabled)
 			bonescript.analogWrite(pinID, value, 2000);
 		else
