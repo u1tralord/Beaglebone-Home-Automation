@@ -42,6 +42,20 @@ CommandProcessor.prototype.loadModules = function(){
 		modules[moduleName].init();
 	}
 }
+CommandProcessor.prototype.clearModules = function(){
+	for(var moduleName in this.modules){
+		//this.modules[moduleName].close();
+		this.modules[moduleName] = null;
+	}
+}
+CommandProcessor.prototype.reloadModules = function(){
+	this.clearModules();
+	this.loadModules();
+}
+CommandProcessor.prototype.stop = function(){
+	this.clearModules();
+	process.exit(0);
+}
 
 CommandProcessor.prototype.processCommand = function(modules, args){
 	for(var mName in modules) {

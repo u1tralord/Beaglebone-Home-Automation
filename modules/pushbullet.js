@@ -46,6 +46,7 @@ PushBulletClient.prototype.execRequest = function(commandArgs){
 
 PushBulletClient.prototype.close = function(){
 	this.running = false;
+	console.log(this);
 	this.stream.close();
 }
 

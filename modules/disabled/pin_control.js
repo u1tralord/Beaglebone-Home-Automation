@@ -50,6 +50,7 @@ PinController.prototype.execRequest = function(commandArgs){
 
 PinController.prototype.close = function(){
 	this.running = false;
+	clearInterval(this.outputUpdater);
 }
 
 PinController.prototype.updateOutputs = function(){
