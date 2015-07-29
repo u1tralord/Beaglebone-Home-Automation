@@ -46,7 +46,7 @@ CommandProcessor.prototype.loadModules = function(){
 CommandProcessor.prototype.processCommand = function(modules, args){
 	for(var mName in modules) {
 		if(moduleAcceptsCommand(modules[mName], args.command)){
-			modules[mName].execCommand(args);
+			modules[mName][args.command](args);
 		}
 	}
 }
@@ -62,5 +62,6 @@ CommandProcessor.prototype.testCommand = function(commandArgs){
 }
 
 function moduleAcceptsCommand(module, command){
-	return (module.acceptedCommands.indexOf(command) > -1)
+	return(typeof module[command] == 'function');
+	//return (module.acceptedCommands.indexOf(command) > -1)
 }

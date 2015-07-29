@@ -72,12 +72,7 @@ function isModule(module){
 		module.log.write_err("Missing function: init()");
 		validModule = false;
 	}
-	/////////////////////
-	
-	if(typeof module.execCommand != 'function'){
-		module.log.write_err("Missing function: execCommand()");
-		validModule = false;
-	}
+
 	////////////////////
 	
 	if(typeof module.execRequest != 'function'){
@@ -94,12 +89,6 @@ function isModule(module){
 	
 	if(typeof module.moduleName != 'string'){
 		module.log.write_err("Missing attribute: moduleName");
-		validModule = false;
-	}
-	////////////////////
-	
-	if(typeof module.acceptedCommands != 'object'){
-		module.log.write_err("Missing attribute: acceptedCommands");
 		validModule = false;
 	}
 	/////////////////////

@@ -83,11 +83,7 @@ settings.path.configs = path.join(__dirname, "config/");
 settings.path.modules = path.join(__dirname, "modules/");
 generatePaths(settings.path);
 
-settings.web.ip = getLocalIp();
-settings.web.port = 8000;
-
-settings.post.ip = getLocalIp();
-settings.post.port = 4040;
+settings.ip = getLocalIp();
 
 settings.logger.log_level = 4;       // Lowest level of log entry allowed to be logged
 settings.logger.error_level = 1;     // Priority level of errors caught
@@ -98,10 +94,9 @@ saveConfig(path.join(settings.path.configs, "/settings"), settings);
 
 var post_server = {};
 post_server.config_name = "post_server";
-post_server.acceptedCommands = ["setPassword"];
 
-post_server.ip = settings.post.ip || getLocalIp();
-post_server.port = settings.post.port || 4040;
+post_server.ip = settings.ip;
+post_server.port = 4040;
 
 saveConfig(path.join(settings.path.configs, "post_server"), post_server);
 
@@ -110,8 +105,8 @@ var web_server = {};
 web_server.config_name = "web_server";
 web_server.acceptedCommands = [];
 
-web_server.ip = settings.web.ip || getLocalIp();
-web_server.port = settings.web.port || 8000;
+web_server.ip = settings.ip;
+web_server.port = 8000;
 web_server.clientPath = settings.path.client || './data/web_server/client/';
 
 saveConfig(path.join(settings.path.configs, "web_server"), web_server);
@@ -129,7 +124,6 @@ pinMap["led0"] = {       //Custom label to be used inside the program (Probably 
 var pin_control = {};
 pin_control.config_name = "pin_control";
 pin_control.update_rate = 1000/30;
-pin_control.acceptedCommands = ["ledControl", "setPinValue"];
 
 pin_control.pin_map = {};
 pin_control.pwmAvailable = ["P8_13", "P8_19", "P8_34", "P8_36", "P8_45", "P8_46", "P9_14", "P9_16", "P9_21", "P9_22", "P9_28", "P9_29", "P9_31", "P9_42"];
@@ -145,7 +139,6 @@ saveConfig(path.join(settings.path.configs, "pin_control"), pin_control);
 //
 var pushbullet = {};
 pushbullet.config_name = "pushbullet";
-pushbullet.acceptedCommands = ["sendPush"];
 
 pushbullet.approved_users = ["ujy5M3deHjE"];
 pushbullet.push_command_code = "$(9028)";
@@ -164,7 +157,6 @@ saveConfig(path.join(settings.path.configs, "pushbullet"), pushbullet);
 //
 var forecast_weather = {};
 forecast_weather.config_name = "forecast_weather";
-forecast_weather.acceptedCommands = ["setLoc"];
 
 //Twenty Minutes: 20 * (1000*60)
 forecast_weather.update_rate = 20 * (1000*60);                      //in milliseconds
@@ -183,7 +175,6 @@ saveConfig(path.join(settings.path.configs, "forecast_weather"), forecast_weathe
 //
 var voice = {};
 voice.config_name = "voice";
-voice.acceptedCommands = ["processVoice"];
 
 voice.modules = [
 	{

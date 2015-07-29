@@ -16,8 +16,6 @@ function ForecastWeather(log, settings, moduleName){
 	this.settings = settings;
 	this.log = log;
 	this.moduleName = moduleName;
-	
-	this.acceptedCommands = this.settings.acceptedCommands;
 }
 util.inherits(ForecastWeather, events.EventEmitter);
 
@@ -37,8 +35,7 @@ ForecastWeather.prototype.init = function(){
 	this.running = true;
 }
 
-ForecastWeather.prototype.update = function() {	
-	//34.038643, -83.829686
+ForecastWeather.prototype.update = function() {
 	var options = {
 	  exclude: 'flags,alerts'
 	};
@@ -49,14 +46,6 @@ ForecastWeather.prototype.update = function() {
 		this.log.write('Getting data from forecast.io', '', 4);
 		//console.log('data: ' + util.inspect(data));
 	}.bind(this));
-}
-ForecastWeather.prototype.execCommand = function(commandArgs){
-	if(this.running){
-		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
-		
-		if(commandArgs.command == 'setLoc')
-			this.setLocation(commandArgs, this.log); //Latitude and Longitude	
-	}
 }
 
 ForecastWeather.prototype.execRequest = function(commandArgs){
@@ -70,8 +59,11 @@ ForecastWeather.prototype.close = function(){
 	clearInterval(this.interval);
 }
 
-ForecastWeather.prototype.setLocation = function(commandArgs){
+
+//////////////////////////////
+ForecastWeather.prototype.setLoc = function(commandArgs){
 	if(commandArgs.hasOwnProperty('lat') && commandArgs.hasOwnProperty('long')){
+		this.settings.locations['current'] = [commandArgs.lat, commandArgs.long];
 		this.log.write("New location: " + commandArgs.lat + ", " + commandArgs.long, "", 3);
 	}
 }

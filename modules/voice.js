@@ -15,7 +15,6 @@ function VoiceProcessor(log, settings, moduleName){
 	this.settings = settings;
 	this.log = log;
 	this.moduleName = moduleName;
-	this.acceptedCommands = this.settings.acceptedCommands;
 }
 util.inherits(VoiceProcessor, events.EventEmitter);
 
@@ -43,16 +42,6 @@ VoiceProcessor.prototype.init = function(){
 	this.running = true;
 }
 
-VoiceProcessor.prototype.execCommand = function(commandArgs){
-	if(this.running){
-
-		if(commandArgs.command == 'processVoice' && commandArgs.hasOwnProperty('voiceText'))
-			this.processVoice(commandArgs);
-
-		//this.log.write('Processing command: ' + JSON.stringify(commandArgs), '', 1);
-	}
-}
-
 VoiceProcessor.prototype.execRequest = function(commandArgs){
 	if(this.running){
 		this.log.write('Processing request: ' + JSON.stringify(commandArgs), '', 1);
@@ -62,17 +51,6 @@ VoiceProcessor.prototype.execRequest = function(commandArgs){
 VoiceProcessor.prototype.close = function(){
 	this.running = false;
 	
-}
-
-VoiceProcessor.prototype.processVoice = function(commandArgs){
-	var classifier = this.classifier;
-
-	this.log.write("YOU SAID: " + commandArgs.voiceText, "", 3);
-	/*commandArgs.voiceText.split(' ').forEach(function(term){
-		this.log.write(term + " : " + classifier.classify(term), "", 4);
-	}.bind(this));*/
-	
-	this.log.write("OVERALL: " + classifier.classify(commandArgs.voiceText), "", 3);
 }
 
 function splitCamelCase(str){
@@ -99,4 +77,15 @@ function removePlaceholderTags(str){
 		str = str.replace(str.substring(startPos, endPos+1), '');
 	}
 	return str;
+}
+
+VoiceProcessor.prototype.processVoice = function(commandArgs){
+	var classifier = this.classifier;
+
+	this.log.write("YOU SAID: " + commandArgs.voiceText, "", 3);
+	/*commandArgs.voiceText.split(' ').forEach(function(term){
+		this.log.write(term + " : " + classifier.classify(term), "", 4);
+	}.bind(this));*/
+	
+	this.log.write("OVERALL: " + classifier.classify(commandArgs.voiceText), "", 3);
 }

@@ -16,8 +16,6 @@ function PushBulletClient(log, settings, moduleName){
 	this.settings = settings;
 	this.log = log;
 	this.moduleName = moduleName;
-	
-	this.acceptedCommands = this.settings.acceptedCommands;
 }
 util.inherits(PushBulletClient, events.EventEmitter);
 
@@ -40,15 +38,6 @@ PushBulletClient.prototype.init = function(){
 	//this.sendPush({type:'note', deviceName:'LGG3', title:'Test', body:'Test Body'});
 }
 
-PushBulletClient.prototype.execCommand = function(commandArgs){
-	if(this.running){
-		if(commandArgs.command == 'sendPush')
-			this.sendPush(commandArgs);
-
-		this.log.write_time("Processing command: " + JSON.stringify(commandArgs), "", 1);
-	}
-}
-
 PushBulletClient.prototype.execRequest = function(commandArgs){
 	if(this.running){
 		this.log.write("Processing request: " + JSON.stringify(commandArgs), "", 1);
@@ -61,35 +50,7 @@ PushBulletClient.prototype.close = function(){
 }
 
 PushBulletClient.prototype.listenForPush = function(){
-	var log = this.log;
-	var thisEmitter = this;
-	var settings = this.settings;
-	
-	this.stream.on('push', function(push){
-		this.log.write("New Push Detected", "", 3);
-		this.log.write("Type:  " + push.type, "", 4);
-		
-		if(push.type == "clip"){
-			var body = push.body.split(":");
-			if(body[1] != null){
-				var title = body[0];
-				body = body[1].trim();
-				
-				if(title == this.settings.push_command_code){
-					if(this.settings.approved_users.indexOf(push.source_user_iden) > -1){
-						var args = parse_push_data(body);
-						this.log.write_time("Push: " + JSON.stringify(args), "", 4);
-						this.emit('command', args);
-						this.deleteLastPush(title, body);
-					}
-					else
-						this.log.write("Unapproved Sender", "", 2);
-				}
-				else
-					this.log.write("Not a command", "", 4);
-			}
-		}
-	}.bind(this));
+	this.stream.on('push', this.processPush.bind(this));
 }
 PushBulletClient.prototype.deleteLastPush = function(title, body){
 	this.pusher.history({limit: 1, modified_after: 1438170000.00000}, function(error, response) {
@@ -108,7 +69,7 @@ PushBulletClient.prototype.listenForConnect = function(){
 
 PushBulletClient.prototype.processPush = function(push){
 	this.log.write("New Push Detected", "", 3);
-	//this.log.write("Type:  " + push.type, "", 4);
+	this.log.write("Type:  " + push.type, "", 4);
 	
 	if(push.type == "clip"){
 		var body = push.body.split(":");
@@ -116,17 +77,18 @@ PushBulletClient.prototype.processPush = function(push){
 			var title = body[0];
 			body = body[1].trim();
 			
-			if(title = this.settings.push_command_code){
+			if(title == this.settings.push_command_code){
 				if(this.settings.approved_users.indexOf(push.source_user_iden) > -1){
 					var args = parse_push_data(body);
-					//log.write("Push: " + JSON.stringify(args), "", 4);
-					//this.commandEmitter.emit('command', args);
+					this.log.write_time("Push: " + JSON.stringify(args), "", 4);
+					this.emit('command', args);
+					this.deleteLastPush(title, body);
 				}
-				else{}
-					//log.write("Unapproved Sender", "", 2);
+				else
+					this.log.write("Unapproved Sender", "", 2);
 			}
-			else{}
-				//log.write("Not a command", "", 4);
+			else
+				this.log.write("Not a command", "", 4);
 		}
 	}
 }
@@ -137,25 +99,6 @@ PushBulletClient.prototype.getMyIden = function(){
 		iden = res.iden;
 	});
 	return iden;
-}
-
-PushBulletClient.prototype.sendPush = function(pushData){
-	var pusher = this.pusher;
-	var log = this.log;
-
-	if(pushData.hasOwnProperty('deviceName') && pushData.hasOwnProperty('title') && pushData.hasOwnProperty('body')){
-		this.pusher.devices(function(err, res){
-			res.devices.forEach(function(device){
-				if(device.nickname == pushData.deviceName){
-					pusher.note(device.iden, 
-							pushData.title, 
-							pushData.body, 
-							function(er, res) {}
-							);
-				}
-			});
-		});
-	}
 }
 
 function parse_push_data(pushBody){
@@ -171,6 +114,23 @@ function parse_push_data(pushBody){
 	return args;
 }
 
+//Add commands here!
+
+PushBulletClient.prototype.sendPush = function(pushData){
+	if(pushData.hasOwnProperty('deviceName') && pushData.hasOwnProperty('title') && pushData.hasOwnProperty('body')){
+		this.pusher.devices(function(err, res){
+			res.devices.forEach(function(device){
+				if(device.nickname == pushData.deviceName){
+					this.pusher.note(device.iden, 
+							pushData.title, 
+							pushData.body, 
+							function(er, res) {}
+							);
+				}
+			}.bind(this));
+		}.bind(this));
+	}
+}
 /*if(dev.nickname == "LGE VS985 4G")
 {
 	console.log("Sending push!");

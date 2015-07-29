@@ -18,7 +18,6 @@ function PostServer(log, settings, moduleName){
 	this.settings = settings;
 	this.log = log;
 	this.moduleName = moduleName;
-	this.acceptedCommands = this.settings.acceptedCommands;
 	
 	var thisEmitter = this;
 	this.server = http.createServer( function(req, res) {
@@ -65,15 +64,6 @@ PostServer.prototype.init = function(){
 	this.server.listen(port, ip);
 	this.log.write_time("Listening at  " + ip + ":" +port, "", 2);
 	this.running = true;
-}
-
-PostServer.prototype.execCommand = function(commandArgs){
-	if(this.running){
-		this.log.write("Processing command: " + JSON.stringify(commandArgs), "", 1);
-		
-		if(commandArgs.command == 'setPassword')
-			this.setPassword(commandArgs);
-	}
 }
 
 PostServer.prototype.execRequest = function(commandArgs){
