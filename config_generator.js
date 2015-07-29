@@ -137,9 +137,9 @@ pin_control.pin_map["USR0"] = {label:"led0", isOutput:true, value:0};
 pin_control.pin_map["USR1"] = {label:"led1", isOutput:true, value:0};
 pin_control.pin_map["USR2"] = {label:"led2", isOutput:true, value:0};
 pin_control.pin_map["USR3"] = {label:"led3", isOutput:true, value:0};
-pin_control.pin_map["P9_14"] = {label:"ledRed", isOutput:true, value:0};
-pin_control.pin_map["P9_16"] = {label:"ledGreen", isOutput:true, value:0};
-pin_control.pin_map["P9_22"] = {label:"ledBlue", isOutput:true, value:0};
+pin_control.pin_map["P9_14"] = {label:"ledRed", isOutput:true, value:0.1};
+pin_control.pin_map["P9_16"] = {label:"ledGreen", isOutput:true, value:0.1};
+pin_control.pin_map["P9_22"] = {label:"ledBlue", isOutput:true, value:0.1};
 saveConfig(path.join(settings.path.configs, "pin_control"), pin_control);
 
 //
