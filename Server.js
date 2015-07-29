@@ -6,9 +6,7 @@
 // * Serve videos and pictures
 // 
 // * Pushbullet API send password & new IP & new SSID
-// * Create Pin Controller
-// * Auto Load Modules 
-// * Both Servers emit event to a command processer which selects a module
+// * Check post messages to make sure they have password
 
 var path = require('path');
 
@@ -22,7 +20,6 @@ GLOBAL["settings"].root_dir = __dirname;
 
 GLOBAL.core_log = logger.Log(path.join(GLOBAL["settings"].path.logs, "CORE.log"), "CORE_SERVER", 4);
 
-var server_log = logger.Log(path.join(GLOBAL["settings"].path.logs, "SERVER.log"), "SERVER" , 4);
 var commandProcessor_log = logger.Log(path.join(GLOBAL["settings"].path.logs, "COMMAND_PROCESSOR.log"),"COMMAND_PROCESSOR" , 4);
 
 var commandProcessor = command_processor.CommandProcessor(commandProcessor_log);

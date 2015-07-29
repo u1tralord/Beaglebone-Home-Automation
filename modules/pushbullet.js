@@ -35,7 +35,7 @@ PushBulletClient.prototype.init = function(){
 	
 	this.stream.connect();
 	this.running = true;
-	this.log.write_time("Pushbullet is listening", "", 3);
+	this.log.write_time("Pushbullet is started", "", 3);
 
 	//this.sendPush({type:'note', deviceName:'LGG3', title:'Test', body:'Test Body'});
 }
@@ -66,8 +66,8 @@ PushBulletClient.prototype.listenForPush = function(){
 	var settings = this.settings;
 	
 	this.stream.on('push', function(push){
-		log.write("New Push Detected", "", 3);
-		log.write("Type:  " + push.type, "", 4);
+		this.log.write("New Push Detected", "", 3);
+		this.log.write("Type:  " + push.type, "", 4);
 		
 		if(push.type == "clip"){
 			var body = push.body.split(":");
@@ -75,20 +75,27 @@ PushBulletClient.prototype.listenForPush = function(){
 				var title = body[0];
 				body = body[1].trim();
 				
-				if(title == settings.push_command_code){
-					if(settings.approved_users.indexOf(push.source_user_iden) > -1){
+				if(title == this.settings.push_command_code){
+					if(this.settings.approved_users.indexOf(push.source_user_iden) > -1){
 						var args = parse_push_data(body);
-						log.write_time("Push: " + JSON.stringify(args), "", 4);
-						thisEmitter.emit('command', args);
+						this.log.write_time("Push: " + JSON.stringify(args), "", 4);
+						this.emit('command', args);
+						this.deleteLastPush(title, body);
 					}
 					else
-						log.write("Unapproved Sender", "", 2);
+						this.log.write("Unapproved Sender", "", 2);
 				}
 				else
-					log.write("Not a command", "", 4);
+					this.log.write("Not a command", "", 4);
 			}
 		}
-	});
+	}.bind(this));
+}
+PushBulletClient.prototype.deleteLastPush = function(title, body){
+	this.pusher.history({limit: 1, modified_after: 1438170000.00000}, function(error, response) {
+		if(response.pushes[0] != null && response.pushes[0].title == title && response.pushes[0].body == body)
+			this.pusher.deletePush(response.pushes[0].iden, function(error, response) {});
+	}.bind(this));
 }
 
 PushBulletClient.prototype.listenForConnect = function(){

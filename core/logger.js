@@ -51,9 +51,10 @@ function Log(path, module, log_level){
 
 Log.prototype.write = function(message, module, priority){
 	if(message != "" && message != null){
+		message = message.replace(/(\n|\r)+$/, '').trim();
 		var global_tab_entry = get_indent(GLOBAL.core_log.indent) + "["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
 		var local_tab_entry = get_indent(this.indent) + "["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
-		GLOBAL.core_log.addEntry(global_tab_entry);
+		GLOBAL.core_log.addEntry("("+getDateTime() + ")" + global_tab_entry);
 		
 		if(priority <= this.log_level){
 			console.log(global_tab_entry);
