@@ -1,5 +1,5 @@
 var path = require('path');
-
+var util = require('util');
 var module_loader = require('./module_loader.js');
 var logger = require('./logger.js');
 
@@ -40,6 +40,16 @@ CommandProcessor.prototype.loadModules = function(){
 			}
 		});
 		modules[moduleName].init();
+		/*
+		console.log('>' + moduleName);
+		for(var part in modules[moduleName])
+		{
+			if(typeof modules[moduleName][part] == 'function')
+			{
+				console.log('  -' + part);
+			}
+		}
+		*/
 	}
 }
 CommandProcessor.prototype.clearModules = function(){
@@ -72,6 +82,7 @@ CommandProcessor.prototype.processRequest = function(modules, args){
 }
 
 CommandProcessor.prototype.testCommand = function(commandArgs){
+	this.log.write('Testing command: ' + util.inspect(commandArgs));
 	this.processCommand(this.modules, commandArgs);
 }
 

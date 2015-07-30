@@ -24,6 +24,24 @@ var QueryString = function () {
 }();
 
 console.log(QueryString);
-socket.on('test', function(data){
-	console.log(data.serverID)
+if(QueryString.devName)
+	socket.emit('devName', {devName:QueryString.devName});
+
+socket.on('streamVideo', function(data){
+	console.log(data.url);
+	if(data.url)
+	{
+		//"http://www.w3schools.com/html/mov_bbb.mp4"
+		document.getElementById('videoElement').src = data.url;
+		console.log(document.getElementById('videoElement').src);
+		document.getElementById('videoElement').play();
+	}
+});
+$("#test-button").click(function(){
+	//var source = $('<source src="' + data.url + '" type="video/mp4">');
+	//$('#videoElement').append(source);
+	
+	document.getElementById('videoElement').src = "http://www.w3schools.com/html/mov_bbb.mp4";
+	console.log($("#videoElement").attr("src"));
+	document.getElementById('videoElement').play();
 });

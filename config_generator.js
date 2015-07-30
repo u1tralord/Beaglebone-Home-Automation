@@ -77,7 +77,6 @@ settings.web = {};
 settings.post = {};
 settings.logger = {};
 
-settings.path.client = './data/web_server/client/';
 settings.path.logs = path.join(__dirname, "logs/");
 settings.path.configs = path.join(__dirname, "config/");
 settings.path.modules = path.join(__dirname, "modules/");
@@ -104,11 +103,11 @@ saveConfig(path.join(settings.path.configs, "post_server"), post_server);
 
 var web_server = {};
 web_server.config_name = "web_server";
-web_server.acceptedCommands = [];
 
 web_server.ip = settings.ip;
 web_server.port = 8000;
-web_server.clientPath = settings.path.client || './data/web_server/client/';
+web_server.clientPath = 'client'; //Root folder containing html,css,js for website. 
+                                  //This is in reference to the global settings.path.data
 
 saveConfig(path.join(settings.path.configs, "web_server"), web_server);
 
