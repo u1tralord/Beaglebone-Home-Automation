@@ -21,17 +21,33 @@ function WebServer(log, settings, moduleName){
 	this.settings = settings;
 	this.log = log;
 	this.moduleName = moduleName;
-	this.acceptedCommands = this.settings.acceptedCommands;
-
-	this.server = connect().use(serveStatic(this.settings.clientPath));
+	//this.data_dir is where all module-related files should be stored
+	// it is automatically generated when the module is loaded and is placed in the settings.path.data location
+	
+	//this.server = connect().use(serveStatic(this.settings.clientPath));
 }
 util.inherits(WebServer, events.EventEmitter);
 
 WebServer.prototype.init = function(){
 	var port = this.settings.port;
 	var ip = this.settings.ip;
-
-	this.server.listen(port, ip);
+	
+	var app = require('express')();
+	var http = require('http').Server(app);
+	var io = require('socket.io')(http);
+	app.use(express.static(path.join(this.data_dir, '/client')));
+	io.on('connection', function(socket){
+		console.log('a user connected');
+		socket.emit('test', {serverID:404});
+		socket.on('disconnect', function(){
+			console.log('user disconnected');
+		});
+	});
+	http.listen(port, function(){
+	  console.log('listening on port: ' + port);
+	});
+	
+	//this.server.listen(port, ip);
 	this.log.write_time("Listening at  " + ip + ":" +port, "", 2);
 	this.running = true;
 }
@@ -45,6 +61,6 @@ WebServer.prototype.execRequest = function(commandArgs){
 WebServer.prototype.close = function(){
 	this.running = false;
 	this.log.write_time("Server shutting down", "", 2);
-	this.server.close();
+	//this.server.close();
 	this.log.write_time("Server successfully closed", "", 2);
 }

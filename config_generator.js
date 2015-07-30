@@ -81,6 +81,7 @@ settings.path.client = './data/web_server/client/';
 settings.path.logs = path.join(__dirname, "logs/");
 settings.path.configs = path.join(__dirname, "config/");
 settings.path.modules = path.join(__dirname, "modules/");
+settings.path.data = path.join(__dirname, "data/");
 generatePaths(settings.path);
 
 settings.ip = getLocalIp();

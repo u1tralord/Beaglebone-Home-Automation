@@ -3,7 +3,7 @@ var path = require('path');
 var events = require('events');
 var logger = require("./logger.js");
 
-exports.dir_exists = function(path){
+dir_exists = function(path){
 	var valid = false;
 	try {
 		stats = fs.lstatSync(path);
@@ -58,6 +58,17 @@ function createModuleLog(moduleName){
 	return moduleLog;
 }
 
+function createModuleDataDir(moduleName){
+	var module_data_dir = path.join(GLOBAL["settings"].path.data, moduleName);
+	if(!dir_exists(module_data_dir)){
+		try {
+			fs.mkdirSync(module_data_dir);
+		} catch(e) {
+			if ( e.code != 'EEXIST' ) throw e;
+		}
+	}
+	return module_data_dir;
+}
 function isModule(module){
 	//Modules need: 
 	// * module instanceof Command Emitter
@@ -113,6 +124,7 @@ exports.loadModules = function(module_dir, modLog){
 	log.write("Module Dir: " + GLOBAL["settings"].path.modules, "", 2);
 	log.write("Config Dir: " + GLOBAL["settings"].path.configs, "", 2);
 	log.write("Log Dir: " + GLOBAL["settings"].path.logs, "", 2);
+	log.write("Data Dir: " + GLOBAL["settings"].path.data, "", 2);
 	var modules = {};
 	
 	log.start_task_time("Loading external modules", "", 2);
@@ -132,9 +144,13 @@ exports.loadModules = function(module_dir, modLog){
 					log.write("Generating Module Log: " + moduleName + ".log", "", 3);
 					var moduleLog = createModuleLog(moduleName);
 					
+						
 					var module = moduleFile.Module(moduleLog, moduleSettings, moduleName);
 					if(isModule(module))
 					{
+						log.write("Generating Data Directory: " + moduleName + ".log", "", 3);
+						module.data_dir = createModuleDataDir(moduleName);
+					
 						modules[moduleName] = module;
 						moduleLoaded = true;
 					}
