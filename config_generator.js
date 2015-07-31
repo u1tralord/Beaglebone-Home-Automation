@@ -104,6 +104,11 @@ saveConfig(path.join(settings.path.configs, "post_server"), post_server);
 var web_server = {};
 web_server.config_name = "web_server";
 
+web_server.mediaPath = {};
+web_server.mediaPath.image = 'res/media/image';
+web_server.mediaPath.music = 'res/media/music';
+web_server.mediaPath.video = 'res/media/video';
+
 web_server.ip = settings.ip;
 web_server.port = 8000;
 web_server.clientPath = 'client'; //Root folder containing html,css,js for website. 

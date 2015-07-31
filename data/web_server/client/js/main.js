@@ -31,12 +31,22 @@ socket.on('streamVideo', function(data){
 	console.log(data.url);
 	if(data.url)
 	{
-		//"http://www.w3schools.com/html/mov_bbb.mp4"
 		document.getElementById('videoElement').src = data.url;
 		console.log(document.getElementById('videoElement').src);
 		document.getElementById('videoElement').play();
 	}
 });
+
+socket.on('streamAudio', function(data){
+  console.log(data.url);
+  if(data.url)
+  {
+    document.getElementById('audioElement').src = data.url;
+    console.log(document.getElementById('audioElement').src);
+    document.getElementById('audioElement').play();
+  }
+});
+
 $("#test-button").click(function(){
 	//var source = $('<source src="' + data.url + '" type="video/mp4">');
 	//$('#videoElement').append(source);

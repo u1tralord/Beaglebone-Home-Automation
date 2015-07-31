@@ -83,9 +83,21 @@ WebServer.prototype.close = function(){
 
 WebServer.prototype.streamVideo = function(commandArgs){
 	console.log("streaming video");
-	var videoURL = 'http://www.w3schools.com/html/mov_bbb.mp4';
-	if(commandArgs.devName && commandArgs.video && this.devices[commandArgs.devName])
+	//var videoURL = 'http://www.w3schools.com/html/mov_bbb.mp4';
+	if(commandArgs.devName && commandArgs.videoURL && this.devices[commandArgs.devName])
 	{
-		this.devices.socket.emit('streamVideo', {url:videoURL});
+		this.devices[commandArgs.devName].socket.emit('streamVideo', {url:commandArgs.videoURL});
+	}
+}
+
+WebServer.prototype.streamAudio = function(commandArgs){
+	console.log("streaming audio");
+	//var videoURL = 'http://www.w3schools.com/html/mov_bbb.mp4'; bn
+	commandArgs.audioURL = path.join(this.settings.mediaPath.music, commandArgs.artist, commandArgs.album, commandArgs.track + '.mp3');
+	console.log(commandArgs.audioURL);
+	
+	if(commandArgs.devName && commandArgs.audioURL && this.devices[commandArgs.devName])
+	{
+		this.devices[commandArgs.devName].socket.emit('streamAudio', {url:commandArgs.audioURL});
 	}
 }

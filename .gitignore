@@ -3,3 +3,5 @@ config/*
 node_modules/*
 *.bat
 account_info.config
+*.mp3
+*.mp4

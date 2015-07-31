@@ -26,6 +26,7 @@ var commandProcessor = command_processor.CommandProcessor(commandProcessor_log);
 commandProcessor.loadModules();
 
 //setTimeout(commandProcessor.clearModules(), 40000);
+//setInterval(commandProcessor.testCommand.bind(commandProcessor), 10000, {command:'streamVideo', devName:'toshibaPC', videoURL:'http://www.w3schools.com/html/mov_bbb.mp4'});
 //commandProcessor.testCommand({command:'setPinValue', led0:1, led1:0, led2:1, led3:0});
 //commandProcessor.testCommand({command:'setPassword', password:'passwordX'});
 //commandProcessor.testCommand({command:'processVoice', voiceText:'send push to lgg3 saying I love programming'});
