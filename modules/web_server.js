@@ -21,9 +21,11 @@ module.exports.prototype.init = function(){
 
 	//console.log(path.join(this.dataDir, '/client'));
 	app.use(express.static(path.join(this.dataDir, '/client')));
-	app.use('/media/music', express.static('j:/'));
-	app.use('/media/videos', express.static('j:/'));
-	app.use('/media/photos', express.static('j:/'));
+	
+	//console.log("MUSIC PATH: "+this.settings.mediaPath.music);
+	app.use('/media/music', express.static(this.settings.mediaPath.music));
+	app.use('/media/videos', express.static(this.settings.mediaPath.videos));
+	app.use('/media/photos', express.static(this.settings.mediaPath.photos));
 	
 	io.on('connection', this.handleConnection.bind(this));
 	

@@ -77,9 +77,9 @@ var web_server = {};
 web_server.config_name = "web_server";
 
 web_server.mediaPath = {};
-web_server.mediaPath.image = 'res/media/image';
-web_server.mediaPath.music = 'res/media/music';
-web_server.mediaPath.video = 'res/media/video';
+web_server.mediaPath.music = 'C:/media/music';
+web_server.mediaPath.videos = 'C:/media/video';
+web_server.mediaPath.photos = 'C:/media/photos';
 
 web_server.ip = settings.ip;
 web_server.port = 8000;
@@ -88,6 +88,13 @@ web_server.clientPath = 'client'; //Root folder containing html,css,js for websi
 
 saveConfig(path.join(settings.path.configs, "web_server"), web_server);
 
+var MediaManager = {};
+
+MediaManager.mediaPath = {};
+MediaManager.mediaPath.music = web_server.mediaPath.music || 'C:/media/music';
+MediaManager.mediaPath.videos = web_server.mediaPath.videos || 'C:/media/video';
+MediaManager.mediaPath.photos = web_server.mediaPath.photos || 'C:/media/photos';
+saveConfig(path.join(settings.path.configs, "MediaManager"), MediaManager);
 
 //Value map for the pins and their keywords
 /*
