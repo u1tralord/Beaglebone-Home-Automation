@@ -21,6 +21,10 @@ module.exports.prototype.init = function(){
 
 	//console.log(path.join(this.dataDir, '/client'));
 	app.use(express.static(path.join(this.dataDir, '/client')));
+	app.use('/media/music', express.static('j:/'));
+	app.use('/media/videos', express.static('j:/'));
+	app.use('/media/photos', express.static('j:/'));
+	
 	io.on('connection', this.handleConnection.bind(this));
 	
 	http.listen(port, function(){
