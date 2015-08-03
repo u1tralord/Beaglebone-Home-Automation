@@ -13,6 +13,10 @@ GLOBAL.core_log = logger.Log(path.join(GLOBAL["settings"].path.logs, "CORE.log")
 moduleLoader.createRequiredDirectories();
 commandProcessor.loadModules();
 
+setTimeout(function(){
+	commandProcessor.testCommand({command:'streamAudio', devName:'workLaptop', artist:"hello", album:"123", track:"123456"});
+}, 15000);
+
 //commandProcessor.testCommand({command:'sendPush', deviceName:'LGG3', title:'TITLE!', body:'Oggly Boogly'});
 /*
 var modules = moduleLoader.loadModules();

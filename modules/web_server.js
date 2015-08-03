@@ -74,7 +74,6 @@ module.exports.prototype.close = function(){
 //////////////////////////////////////////
 
 module.exports.prototype.streamVideo = function(commandArgs){
-	console.log("streaming video");
 	if(commandArgs.devName && commandArgs.videoURL && this.devices[commandArgs.devName])
 	{
 		this.devices[commandArgs.devName].socket.emit('streamVideo', {url:commandArgs.videoURL});
@@ -82,9 +81,7 @@ module.exports.prototype.streamVideo = function(commandArgs){
 }
 
 module.exports.prototype.streamAudio = function(commandArgs){
-	console.log("streaming audio");
-	commandArgs.audioURL = path.join(this.settings.mediaPath.music, commandArgs.artist, commandArgs.album, commandArgs.track + '.mp3');
-	console.log(commandArgs.audioURL);
+	//commandArgs.audioURL = path.join(this.settings.mediaPath.music, commandArgs.artist, commandArgs.album, commandArgs.track + '.mp3');
 	
 	if(commandArgs.devName && commandArgs.audioURL && this.devices[commandArgs.devName])
 	{
