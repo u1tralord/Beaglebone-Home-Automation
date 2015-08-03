@@ -1,24 +1,9 @@
 var events = require('events');
 var util = require('util');
 var natural = require('natural');
+util.inherits(module.exports, require(require('path').join(GLOBAL.ROOTDIR, 'core', 'module.js')));
 
-exports.Module = function(log, settings, moduleName){
-	if(log != null && settings != null && moduleName != null){
-		return new VoiceProcessor(log, settings, moduleName);
-	}
-	else 
-		throw new Error('Missing args to create module');
-}
-
-function VoiceProcessor(log, settings, moduleName){
-	events.EventEmitter.call(this);
-	this.settings = settings;
-	this.log = log;
-	this.moduleName = moduleName;
-}
-util.inherits(VoiceProcessor, events.EventEmitter);
-
-VoiceProcessor.prototype.init = function(){
+module.exports.prototype.init = function(){
 	var classifier = new natural.BayesClassifier();
 
 	this.settings.modules.forEach(function(module){
@@ -42,13 +27,13 @@ VoiceProcessor.prototype.init = function(){
 	this.running = true;
 }
 
-VoiceProcessor.prototype.execRequest = function(commandArgs){
+module.exports.prototype.execRequest = function(commandArgs){
 	if(this.running){
 		this.log.write('Processing request: ' + JSON.stringify(commandArgs), '', 1);
 	}
 }
 
-VoiceProcessor.prototype.close = function(){
+module.exports.prototype.close = function(){
 	this.running = false;
 	
 }
@@ -79,7 +64,7 @@ function removePlaceholderTags(str){
 	return str;
 }
 
-VoiceProcessor.prototype.processVoice = function(commandArgs){
+module.exports.prototype.processVoice = function(commandArgs){
 	var classifier = this.classifier;
 
 	this.log.write("YOU SAID: " + commandArgs.voiceText, "", 3);

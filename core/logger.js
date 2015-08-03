@@ -65,7 +65,7 @@ Log.prototype.write = function(message, module, priority){
 
 Log.prototype.write_time = function(message, module, priority){
 	if(message != "" && message != null){
-		var global_tab_entry = get_indent(GLOBAL.core_log.indent) + "("+getDateTime() + ") ["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
+		var global_tab_entry = get_indent(GLOBAL.core_log.indent) + "("+getDateTime() + ")["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
 		var local_tab_entry = get_indent(this.indent) + "("+getDateTime() + ") ["+(module == "" ? this.module : this.module +" - " +module)  +"]" + (LOG_PRIORITY_LEVEL ? " [" + priority +"]" : "") + " - " + message;
 		GLOBAL.core_log.addEntry(global_tab_entry);
 		

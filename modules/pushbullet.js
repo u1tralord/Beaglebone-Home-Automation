@@ -1,25 +1,9 @@
 var PushBullet = require('pushbullet');
 var events = require('events');
 var util = require('util');
+util.inherits(module.exports, require(require('path').join(GLOBAL.ROOTDIR, 'core', 'module.js')));
 
-exports.Module = function(log, settings, moduleName){
-	if(log != null && settings != null && moduleName != null){
-		return new PushBulletClient(log, settings, moduleName);
-	}
-	else 
-		throw new Error("Missing args to create module");
-}
-
-function PushBulletClient(log, settings, moduleName){
-	events.EventEmitter.call(this);
-	
-	this.settings = settings;
-	this.log = log;
-	this.moduleName = moduleName;
-}
-util.inherits(PushBulletClient, events.EventEmitter);
-
-PushBulletClient.prototype.init = function(){
+module.exports.prototype.init = function(){
 	this.pusher = new PushBullet(this.settings.API_key);
 	this.log.write("Instance started with API key: " + this.settings.API_key, "", 3);
 	this.log.write("Approved Users: " + JSON.stringify(this.settings.approved_users), "", 3);
@@ -38,29 +22,23 @@ PushBulletClient.prototype.init = function(){
 	//this.sendPush({type:'note', deviceName:'LGG3', title:'Test', body:'Test Body'});
 }
 
-PushBulletClient.prototype.execRequest = function(commandArgs){
-	if(this.running){
-		this.log.write("Processing request: " + JSON.stringify(commandArgs), "", 1);
-	}
-}
-
-PushBulletClient.prototype.close = function(){
+module.exports.prototype.close = function(){
 	this.running = false;
 	console.log(this);
 	this.stream.close();
 }
 
-PushBulletClient.prototype.listenForPush = function(){
+module.exports.prototype.listenForPush = function(){
 	this.stream.on('push', this.processPush.bind(this));
 }
-PushBulletClient.prototype.deleteLastPush = function(title, body){
+module.exports.prototype.deleteLastPush = function(title, body){
 	this.pusher.history({limit: 1, modified_after: 1438170000.00000}, function(error, response) {
 		if(response.pushes[0] != null && response.pushes[0].title == title && response.pushes[0].body == body)
 			this.pusher.deletePush(response.pushes[0].iden, function(error, response) {});
 	}.bind(this));
 }
 
-PushBulletClient.prototype.listenForConnect = function(){
+module.exports.prototype.listenForConnect = function(){
 	var log = this.log;
 	var thisEmitter = this;
 	this.stream.on('connect', function(){
@@ -68,7 +46,7 @@ PushBulletClient.prototype.listenForConnect = function(){
 	});
 }
 
-PushBulletClient.prototype.processPush = function(push){
+module.exports.prototype.processPush = function(push){
 	this.log.write("New Push Detected", "", 3);
 	this.log.write("Type:  " + push.type, "", 4);
 	
@@ -94,7 +72,7 @@ PushBulletClient.prototype.processPush = function(push){
 	}
 }
 
-PushBulletClient.prototype.getMyIden = function(){
+module.exports.prototype.getMyIden = function(){
 	var iden = null;
 	this.pusher.me(function(err, res){
 		iden = res.iden;
@@ -117,8 +95,9 @@ function parse_push_data(pushBody){
 
 //Add commands here!
 
-PushBulletClient.prototype.sendPush = function(pushData){
+module.exports.prototype.sendPush = function(pushData){
 	if(pushData.hasOwnProperty('deviceName') && pushData.hasOwnProperty('title') && pushData.hasOwnProperty('body')){
+		this.log.write("Sending push to: " + pushData.deviceName + ' - \"' + pushData.title + ": " + pushData.body + '\"', '', 3);
 		this.pusher.devices(function(err, res){
 			res.devices.forEach(function(device){
 				if(device.nickname == pushData.deviceName){
@@ -132,6 +111,7 @@ PushBulletClient.prototype.sendPush = function(pushData){
 		}.bind(this));
 	}
 }
+
 /*if(dev.nickname == "LGE VS985 4G")
 {
 	console.log("Sending push!");

@@ -7,34 +7,20 @@ var http = require('http');
 var path = require('path');
 var serveStatic = require('serve-static');
 var util = require('util');
+util.inherits(module.exports, require(require('path').join(GLOBAL.ROOTDIR, 'core', 'module.js')));
 
-exports.Module = function(log, settings, moduleName){
-	if(log != null && settings != null && moduleName != null){
-		return new WebServer(log, settings, moduleName);
-	}
-	else 
-		throw new Error("Missing args to create module");
-}
-
-function WebServer(log, settings, moduleName){
-	events.EventEmitter.call(this);
-	this.settings = settings;
-	this.log = log;
-	this.moduleName = moduleName;
-	this.devices = {};
-	//this.data_dir is where all module-related files should be stored
-	// it is automatically generated and set when the module is loaded and is placed in the settings.path.data location
-}
-util.inherits(WebServer, events.EventEmitter);
-
-WebServer.prototype.init = function(){
+module.exports.prototype.init = function(){
 	var port = this.settings.port;
 	var ip = this.settings.ip;
-	
+
+	this.devices = {};
+
 	var app = require('express')();
 	var http = require('http').Server(app);
 	var io = require('socket.io')(http);
-	app.use(express.static(path.join(this.data_dir, '/client')));
+
+	//console.log(path.join(this.dataDir, '/client'));
+	app.use(express.static(path.join(this.dataDir, '/client')));
 	io.on('connection', this.handleConnection.bind(this));
 	
 	http.listen(port, function(){
@@ -44,7 +30,7 @@ WebServer.prototype.init = function(){
 	this.running = true;
 }
 
-WebServer.prototype.handleConnection = function(socket){
+module.exports.prototype.handleConnection = function(socket){
 	var client = {};
 	
 	socket.on('devName', function(data){
@@ -66,13 +52,13 @@ WebServer.prototype.handleConnection = function(socket){
 	}.bind(this));
 }
 
-WebServer.prototype.execRequest = function(commandArgs){
+module.exports.prototype.execRequest = function(commandArgs){
 	if(this.running){
 		this.log.write("Processing request: " + JSON.stringify(commandArgs), "", 1);
 	}
 }
 
-WebServer.prototype.close = function(){
+module.exports.prototype.close = function(){
 	this.running = false;
 	this.log.write_time("Server shutting down", "", 2);
 	//this.server.close();
@@ -81,18 +67,16 @@ WebServer.prototype.close = function(){
 
 //////////////////////////////////////////
 
-WebServer.prototype.streamVideo = function(commandArgs){
+module.exports.prototype.streamVideo = function(commandArgs){
 	console.log("streaming video");
-	//var videoURL = 'http://www.w3schools.com/html/mov_bbb.mp4';
 	if(commandArgs.devName && commandArgs.videoURL && this.devices[commandArgs.devName])
 	{
 		this.devices[commandArgs.devName].socket.emit('streamVideo', {url:commandArgs.videoURL});
 	}
 }
 
-WebServer.prototype.streamAudio = function(commandArgs){
+module.exports.prototype.streamAudio = function(commandArgs){
 	console.log("streaming audio");
-	//var videoURL = 'http://www.w3schools.com/html/mov_bbb.mp4'; bn
 	commandArgs.audioURL = path.join(this.settings.mediaPath.music, commandArgs.artist, commandArgs.album, commandArgs.track + '.mp3');
 	console.log(commandArgs.audioURL);
 	

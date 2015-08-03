@@ -1,25 +1,9 @@
 var Forecast = require('forecast.io');
 var events = require('events');
 var util = require('util');
+util.inherits(module.exports, require(require('path').join(GLOBAL.ROOTDIR, 'core', 'module.js')));
 
-exports.Module = function(log, settings, moduleName){
-	if(log != null && settings != null && moduleName != null){
-		return new ForecastWeather(log, settings, moduleName);
-	}
-	else 
-		throw new Error("Missing args to create module");
-}
-
-function ForecastWeather(log, settings, moduleName){
-	events.EventEmitter.call(this);
-	
-	this.settings = settings;
-	this.log = log;
-	this.moduleName = moduleName;
-}
-util.inherits(ForecastWeather, events.EventEmitter);
-
-ForecastWeather.prototype.init = function(){
+module.exports.prototype.init = function(){
 	var API_key = this.settings.API_key;
 	var timeoutMs = this.settings.timeout;
 	
@@ -27,15 +11,14 @@ ForecastWeather.prototype.init = function(){
 	  APIKey: API_key,
 	  timeout: timeoutMs
 	};
-	forecast = new Forecast(options);
-	this.forecast = forecast;
-	
+	this.forecast = new Forecast(options);
+	this.log.write("Successfully connected to forecast.io API", "", 3);
 	this.interval = setInterval(this.update.bind(this), this.settings.update_rate, this);
 	
 	this.running = true;
 }
 
-ForecastWeather.prototype.update = function() {
+module.exports.prototype.update = function() {
 	var options = {
 	  exclude: 'flags,alerts'
 	};
@@ -48,22 +31,22 @@ ForecastWeather.prototype.update = function() {
 	}.bind(this));
 }
 
-ForecastWeather.prototype.execRequest = function(commandArgs){
+module.exports.prototype.execRequest = function(commandArgs){
 	if(this.running){
 		this.log.write("Processing request: " + JSON.stringify(commandArgs), "", 1);
 	}
 }
 
-ForecastWeather.prototype.close = function(){
+module.exports.prototype.close = function(){
 	this.running = false;
 	clearInterval(this.interval);
 }
 
 
 //////////////////////////////
-ForecastWeather.prototype.setLoc = function(commandArgs){
+module.exports.prototype.setLoc = function(commandArgs){
 	if(commandArgs.hasOwnProperty('lat') && commandArgs.hasOwnProperty('long')){
 		this.settings.locations['current'] = [commandArgs.lat, commandArgs.long];
-		this.log.write("New location: " + commandArgs.lat + ", " + commandArgs.long, "", 3);
+		this.log.write("New location: " + this.settings.locations.current[0] + ", " + this.settings.locations.current[1], "", 3);
 	}
 }

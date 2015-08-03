@@ -1,0 +1,1 @@
+require('util').inherits(module.exports, require(require('path').join(GLOBAL.ROOTDIR, 'core', 'module.js')));

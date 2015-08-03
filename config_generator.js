@@ -26,33 +26,6 @@ var getLocalIp = function(){
 	return ip;
 }
 
-function dir_exists(path){
-	try {
-		stats = fs.lstatSync(path);
-		if (stats.isDirectory()) { return true; }
-	}
-	catch (e) {
-		return false;
-	}
-}
-
-function generatePaths(paths){
-	for (var path_name in paths) {
-	if (paths.hasOwnProperty(path_name)){
-		var path = paths[path_name];
-		if(!dir_exists(path)){
-			try {
-				fs.mkdirSync(path);
-			} catch(e) {
-				if ( e.code != 'EEXIST' ) throw e;
-			}
-		}
-		else
-			console.log("Dir already exists");
-	}
-}
-}
-
 var saveConfig = function(filename, objectToSave){
 	fs.writeFile(filename+".config", JSON.stringify(objectToSave), function(err) {
     if(err) {
@@ -77,11 +50,10 @@ settings.web = {};
 settings.post = {};
 settings.logger = {};
 
-settings.path.logs = path.join(__dirname, "logs/");
-settings.path.configs = path.join(__dirname, "config/");
-settings.path.modules = path.join(__dirname, "modules/");
-settings.path.data = path.join(__dirname, "data/");
-generatePaths(settings.path);
+settings.path.logs = "./logs/";
+settings.path.configs = "./config/";
+settings.path.modules = "./modules/";
+settings.path.data = "./data/";
 
 settings.ip = getLocalIp();
 
@@ -112,7 +84,7 @@ web_server.mediaPath.video = 'res/media/video';
 web_server.ip = settings.ip;
 web_server.port = 8000;
 web_server.clientPath = 'client'; //Root folder containing html,css,js for website. 
-                                  //This is in reference to the global settings.path.data
+                                  //This is in reference module's data directory name
 
 saveConfig(path.join(settings.path.configs, "web_server"), web_server);
 
