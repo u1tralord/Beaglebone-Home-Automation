@@ -7,9 +7,9 @@ module.exports.prototype.init = function(){
 	this.videos = [];
 	this.photos = [];
 	
-	loadMusic(function(){this.log.write('Music Loaded', '', 2)}.bind(this));
-	loadVideos(function(){this.log.write('Videos Loaded', '', 2)}.bind(this));
-	loadPhotos(function(){this.log.write('Photos Loaded', '', 2)}.bind(this));
+	this.loadMusic(function(){this.log.write('Music Loaded', '', 2)}.bind(this));
+	this.loadVideos(function(){this.log.write('Videos Loaded', '', 2)}.bind(this));
+	this.loadPhotos(function(){this.log.write('Photos Loaded', '', 2)}.bind(this));
 }
 
 module.exports.prototype.close = function(){
@@ -27,7 +27,7 @@ module.exports.prototype.streamAudio = function(commandArgs){
 	}
 }
 
-module.exports.prototype.loadMusic(done){
+module.exports.prototype.loadMusic = function(done){
 	this.music.length = 0;
 	walk(this.settings.mediaPath.music, function(err, results) {
 		if (err) throw err;
@@ -44,7 +44,7 @@ module.exports.prototype.loadMusic(done){
 		done();
 	}.bind(this));
 }
-module.exports.prototype.loadVideos(done){
+module.exports.prototype.loadVideos = function(done){
 	this.videos.length = 0;
 	walk(this.settings.mediaPath.videos, function(err, results) {
 		if (err) throw err;
@@ -61,7 +61,7 @@ module.exports.prototype.loadVideos(done){
 		done();
 	}.bind(this));
 }
-module.exports.prototype.loadPhotos(done){
+module.exports.prototype.loadPhotos = function(done){
 	this.photos.length = 0;
 	walk(this.settings.mediaPath.photos, function(err, results) {
 		if (err) throw err;

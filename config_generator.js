@@ -78,7 +78,7 @@ web_server.config_name = "web_server";
 
 web_server.mediaPath = {};
 web_server.mediaPath.music = 'C:/media/music';
-web_server.mediaPath.videos = 'C:/media/video';
+web_server.mediaPath.videos = 'C:/media/videos';
 web_server.mediaPath.photos = 'C:/media/photos';
 
 web_server.ip = settings.ip;
@@ -92,7 +92,7 @@ var MediaManager = {};
 
 MediaManager.mediaPath = {};
 MediaManager.mediaPath.music = web_server.mediaPath.music || 'C:/media/music';
-MediaManager.mediaPath.videos = web_server.mediaPath.videos || 'C:/media/video';
+MediaManager.mediaPath.videos = web_server.mediaPath.videos || 'C:/media/videos';
 MediaManager.mediaPath.photos = web_server.mediaPath.photos || 'C:/media/photos';
 saveConfig(path.join(settings.path.configs, "MediaManager"), MediaManager);
 
