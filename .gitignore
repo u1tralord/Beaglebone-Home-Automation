@@ -1,6 +1,7 @@
 logs/*
 config/*
 node_modules/*
+data/mediaManager/MusicFileMap.json
 *.bat
 account_info.config
 *.mp3

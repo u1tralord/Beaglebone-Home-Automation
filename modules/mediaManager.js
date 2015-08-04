@@ -1,5 +1,7 @@
 var path = require('path');
 var fs = require('fs');
+var id3 = require('id3js');
+var natural = require('natural');
 require('util').inherits(module.exports, require(require('path').join(GLOBAL.ROOTDIR, 'core', 'module.js')));
 
 module.exports.prototype.init = function(){
@@ -7,7 +9,10 @@ module.exports.prototype.init = function(){
 	this.videos = [];
 	this.photos = [];
 	
-	this.loadMusic(function(){this.log.write('Music Loaded', '', 2)}.bind(this));
+	this.loadMusic(function(){
+		this.log.write('Music Loaded', '', 2);
+		fs.writeFile(path.join(this.dataDir, "MusicFileMap.json"), JSON.stringify(this.music), function(err) {console.log('saved')});
+	}.bind(this));
 	this.loadVideos(function(){this.log.write('Videos Loaded', '', 2)}.bind(this));
 	this.loadPhotos(function(){this.log.write('Photos Loaded', '', 2)}.bind(this));
 }
@@ -20,11 +25,24 @@ module.exports.prototype.streamAudio = function(commandArgs){
 	var newCommandArgs = {};
 	newCommandArgs.devName = commandArgs.devName;
 	newCommandArgs.command = commandArgs.command;
-	
+
 	if(commandArgs.artist || commandArgs.album || commandArgs.track){
-		newCommandArgs.audioURL = path.join(commandArgs.artist, commandArgs.album, commandArgs.track + '.mp3');
+		//newCommandArgs.audioURL = path.join(commandArgs.artist, commandArgs.album, commandArgs.track + '.mp3');
+		newCommandArgs.audioURL = this.findSongURL(commandArgs.artist, commandArgs.album, commandArgs.track);
 		this.emit('command', newCommandArgs);
 	}
+}
+module.exports.prototype.findSongURL = function(artist, album, track){
+	artistMatch = {artistName:"", matchValue:0};
+	this.music.forEach(function(musicObj){
+		var matchVal = natural.JaroWinklerDistance(artist,musicObj.artist);
+		if(matchVal > artistMatch.matchValue)
+		{
+			artistMatch.matchValue = matchVal;
+			artistMatch.artistName = musicObj.artist;
+		}
+	});
+	console.log('BEST MATCH: ' + artistMatch.artistName + '- ' + artistMatch.matchValue );
 }
 
 module.exports.prototype.loadMusic = function(done){
@@ -34,14 +52,26 @@ module.exports.prototype.loadMusic = function(done){
 		var mp3_files = results.filter(function(fileName){
 		  if(path.extname(fileName) == '.mp3') return true;
 		});
-		mp3_files.forEach(function(file){
-			var musicObj = {url:file};
+
+		var pending = mp3_files.length;
+		mp3_files.forEach(function(filePath){
+			var musicObj = {url:filePath};
 			
-			//Get music data like track and artist and junk
-			
-			this.music.push(musicObj);
+			id3({ file:filePath, type: id3.OPEN_LOCAL }, function(err, tags) {
+				//this.log.write(filePath, "", 4);
+				if(tags)
+				{
+					musicObj.track = tags.title != null ? tags.title : "";
+					musicObj.album = tags.album != null ? tags.album : "";
+					musicObj.artist = tags.artist != null ? tags.artist : "";
+					musicObj.year = tags.year != null ? tags.year : "";	
+				}
+				this.music.push(musicObj);
+				pending--;
+				if(pending <= 0)
+					done();
+			}.bind(this));
 		}.bind(this));
-		done();
 	}.bind(this));
 }
 module.exports.prototype.loadVideos = function(done){

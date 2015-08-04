@@ -25,6 +25,7 @@
     "connect": "*",
     "express": "*",
     "forecast.io": "*",
+    "id3js": "^1.1.3",
     "natural": "*",
     "pushbullet": "*",
     "serve-static": "*",
