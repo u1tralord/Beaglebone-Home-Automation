@@ -71,6 +71,6 @@ module.exports.prototype.processVoice = function(commandArgs){
 	/*commandArgs.voiceText.split(' ').forEach(function(term){
 		this.log.write(term + " : " + classifier.classify(term), "", 4);
 	}.bind(this));*/
-	
-	this.log.write("OVERALL: " + classifier.classify(commandArgs.voiceText), "", 3);
+	this.log.write("OVERALL: " + util.inspect(classifier.getClassifications(commandArgs.voiceText)), "", 3);
+	//this.log.write("OVERALL: " + classifier.classify(commandArgs.voiceText), "", 3);
 }
