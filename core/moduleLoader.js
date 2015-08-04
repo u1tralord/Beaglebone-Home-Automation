@@ -24,7 +24,7 @@ exports.loadModules = function(){
 				log.end_task("Successfully loaded module", "", 3);
 				modules[moduleName] = module;
 			}
-			else log.end_task("Module failed to load", "", 3);
+			else log.end_task("Module failed to load (Possibly disabled by meta tag)", "", 3);
 		}
 	}.bind(this));
 	log.end_task_time("Modules finished loading", "", 2);
@@ -32,17 +32,20 @@ exports.loadModules = function(){
 }
 
 exports.loadModule = function(moduleName){
-	var module = require(path.join(GLOBAL.ROOTDIR, GLOBAL.settings.path.modules, moduleName + ".js")).prototype;
-	module.moduleName = moduleName;
-	log.write("Loading Module Config: " + moduleName + ".config", "", 3);
-	module.settings = this.loadConfig(moduleName);
-	log.write("Generating Data Directory: /" + moduleName, "", 3);
-	module.dataDir = this.loadDataDir(moduleName);
-	log.write("Starting Module Log: " + moduleName + ".log", "", 3);
-	module.log = this.loadLog(moduleName);
+	var moduleFile = require(path.join(GLOBAL.ROOTDIR, GLOBAL.settings.path.modules, moduleName + ".js"));
+	var module = moduleFile.prototype;
+	module.meta = moduleFile.meta;
 	
-	if(isValidModule(module)) return module;
-	
+	if(module.meta == null || module.meta.enabled){
+		module.moduleName = moduleName;
+		log.write("Loading Module Config: " + moduleName + ".config", "", 3);
+		module.settings = this.loadConfig(moduleName);
+		log.write("Generating Data Directory: /" + moduleName, "", 3);
+		module.dataDir = this.loadDataDir(moduleName);
+		log.write("Starting Module Log: " + moduleName + ".log", "", 3);
+		module.log = this.loadLog(moduleName);
+		if(isValidModule(module)) return module;
+	}
 	return null;
 }
 

@@ -77,7 +77,7 @@ var web_server = {};
 web_server.config_name = "web_server";
 
 web_server.mediaPath = {};
-web_server.mediaPath.music = 'C:/media/music';
+web_server.mediaPath.music = 'F:/Personal/Music';
 web_server.mediaPath.videos = 'C:/media/videos';
 web_server.mediaPath.photos = 'C:/media/photos';
 
@@ -155,6 +155,13 @@ forecast_weather.locations["Lawrenceville"] = [33.956745, -83.988990];
 
 saveConfig(path.join(settings.path.configs, "forecast_weather"), forecast_weather);
 
+var AutoRemote = {};
+AutoRemote.url = 'https://autoremotejoaomgcd.appspot.com/';
+AutoRemote.sendMessagePath = 'sendmessage?';
+
+AutoRemote.password = account_info.AutoRemote.password;
+AutoRemote.devices = account_info.AutoRemote.devices;
+saveConfig(path.join(settings.path.configs, "AutoRemote"), AutoRemote);
 
 //
 var voice = {};

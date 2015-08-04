@@ -14,7 +14,8 @@ moduleLoader.createRequiredDirectories();
 commandProcessor.loadModules();
 
 setTimeout(function(){
-	commandProcessor.testCommand({command:'streamAudio', devName:'workLaptop', artist:"twenty", album:"junk", track:"123456"});
+//	commandProcessor.testCommand({command:'streamAudio', devName:'workLaptop', artist:"alternate", album:"junk", track:"123456"});
+	commandProcessor.testCommand({command:'sendRemoteMessage', deviceName:'LGG3', password:'yes', message:'myMessage :)'});
 }, 5000);
 
 //commandProcessor.testCommand({command:'sendPush', deviceName:'LGG3', title:'TITLE!', body:'Oggly Boogly'});
