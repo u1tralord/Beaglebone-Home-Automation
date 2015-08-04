@@ -2,7 +2,8 @@ var path = require('path');
 var fs = require('fs');
 var id3 = require('id3js');
 var natural = require('natural');
-require('util').inherits(module.exports, require(require('path').join(GLOBAL.ROOTDIR, 'core', 'module.js')));
+var util = require('util');
+util.inherits(module.exports, require(require('path').join(GLOBAL.ROOTDIR, 'core', 'module.js')));
 
 module.exports.prototype.init = function(){
 	this.music = [];
@@ -29,11 +30,15 @@ module.exports.prototype.streamAudio = function(commandArgs){
 	if(commandArgs.artist || commandArgs.album || commandArgs.track){
 		//newCommandArgs.audioURL = path.join(commandArgs.artist, commandArgs.album, commandArgs.track + '.mp3');
 		newCommandArgs.audioURL = this.findSongURL(commandArgs.artist, commandArgs.album, commandArgs.track);
-		this.emit('command', newCommandArgs);
+		
+		if(newCommandArgs.audioURL)
+			this.emit('command', newCommandArgs);
+		else
+			this.log.write('Song file not found!', '', 3);
 	}
 }
 module.exports.prototype.findSongURL = function(artist, album, track){
-	artistMatch = {artistName:"", matchValue:0};
+	/*artistMatch = {artistName:"", matchValue:0};
 	this.music.forEach(function(musicObj){
 		var matchVal = natural.JaroWinklerDistance(artist,musicObj.artist);
 		if(matchVal > artistMatch.matchValue)
@@ -41,8 +46,38 @@ module.exports.prototype.findSongURL = function(artist, album, track){
 			artistMatch.matchValue = matchVal;
 			artistMatch.artistName = musicObj.artist;
 		}
-	});
-	console.log('BEST MATCH: ' + artistMatch.artistName + '- ' + artistMatch.matchValue );
+	});*/
+	var results = this.music;
+	results = results.filter(function(musicObj){ return natural.JaroWinklerDistance(artist,musicObj.artist) > 0.6});
+	if(results.length < 1)
+		results = this.music;
+	
+	results = results.filter(function(musicObj){ return natural.JaroWinklerDistance(album,musicObj.album) > 0.6});
+	if(results.length < 1)
+		results = this.music;
+	
+	results = results.filter(function(musicObj){ return natural.JaroWinklerDistance(track,musicObj.track) > 0.6});
+	
+	//this.log.write(util.inspect(results), "", 4);
+	if(results.length > 1){
+		var bestMatchValue=0;
+		var bestMatch = null;
+		results.forEach(function(musicObj){
+			var matchVal = natural.JaroWinklerDistance(track,musicObj.track);
+			if(matchVal > bestMatchValue)
+				bestMatch = musicObj;
+		});
+		this.log.write(util.inspect(bestMatch), "", 4);
+		return bestMatch.url;
+	}
+	else if(results.length == 1){
+		this.log.write(util.inspect(results[0]), "", 4);
+		return results[0].url;
+	}
+	else{
+		return null;
+	}
+	//console.log('BEST MATCH: ' + artistMatch.artistName + '- ' + artistMatch.matchValue );
 }
 
 module.exports.prototype.loadMusic = function(done){

@@ -1,6 +1,6 @@
 {
   "name": "beaglebone-home-automation",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A modular home automation program designed for the Beaglebone black.",
   "main": "server.js",
   "scripts": {

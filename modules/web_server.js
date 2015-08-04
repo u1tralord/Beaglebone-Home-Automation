@@ -19,13 +19,17 @@ module.exports.prototype.init = function(){
 	var http = require('http').Server(app);
 	var io = require('socket.io')(http);
 
+	this.musicApiUrl = '/media/music';
+	this.videosApiUrl = '/media/videos';
+	this.photosApiUrl = '/media/photos';
+	
 	//console.log(path.join(this.dataDir, '/client'));
 	app.use(express.static(path.join(this.dataDir, '/client')));
 	
 	//console.log("MUSIC PATH: "+this.settings.mediaPath.music);
-	app.use('/media/music', express.static(this.settings.mediaPath.music));
-	app.use('/media/videos', express.static(this.settings.mediaPath.videos));
-	app.use('/media/photos', express.static(this.settings.mediaPath.photos));
+	app.use(this.musicApiUrl, express.static(this.settings.mediaPath.music));
+	app.use(this.videosApiUrl, express.static(this.settings.mediaPath.videos));
+	app.use(this.photosApiUrl, express.static(this.settings.mediaPath.photos));
 	
 	io.on('connection', this.handleConnection.bind(this));
 	
@@ -82,9 +86,13 @@ module.exports.prototype.streamVideo = function(commandArgs){
 
 module.exports.prototype.streamAudio = function(commandArgs){
 	//commandArgs.audioURL = path.join(this.settings.mediaPath.music, commandArgs.artist, commandArgs.album, commandArgs.track + '.mp3');
-	
 	if(commandArgs.devName && commandArgs.audioURL && this.devices[commandArgs.devName])
 	{
+		var fixedURL = commandArgs.audioURL.replace(new RegExp('\\' + path.sep, 'g'), '/');
+		var fixedMusicPath = this.settings.mediaPath.music.replace(new RegExp('\\' + path.sep, 'g'), '/');
+		commandArgs.audioURL = fixedURL.replace(fixedMusicPath, this.musicApiUrl);
+		
+		this.log.write('Sending Audio: ' + commandArgs.audioURL, '', 3);
 		this.devices[commandArgs.devName].socket.emit('streamAudio', {url:commandArgs.audioURL});
 	}
 }
